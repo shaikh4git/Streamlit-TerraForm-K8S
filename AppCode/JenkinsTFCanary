@@ -46,12 +46,16 @@ pipeline {
         stage ('Run only for relevant changes!!!') {
             when {
                 anyOf {
-                    changeset "app.py"
-                    changeset "Dockerfile"
-                    changeset "requirements.txt"
-                    changeset "JenkinsTFCanary"
-                    changeset "tests/test_app.py"
-                    changeset "ansible/staging_canary.yaml"
+                    changeset "AppCode/app.py"
+                    changeset "AppCode/Dockerfile"
+                    changeset "AppCode/requirements.txt"
+                    changeset "AppCode/JenkinsTFCanary"
+                    changeset "AppCode/tests/test_app.py"
+                    changeset "AppCode/ansible/staging_canary.yaml"
+                    changeset "terraform/main.tf"
+                    changeset "terraform/outputs.tf"
+                    changeset "terraform/variables.tf"
+                    changeset "terraform/terrafom.tfvars"
                 }
             }
 
@@ -202,7 +206,106 @@ pipeline {
                             -e "image_tag=$IMAGE_TAG"
                         '''
                     }
-                }       
+                } 
+
+                stage('Terraform Deploy Streamlit to Kubernetes') {
+                    steps {
+                        timeout(time: 15, unit: 'MINUTES') {
+                            withCredentials([
+                                file(
+                                    credentialsId: 'kubeconfig-dockerdesktop',
+                                    variable: 'KUBE_CONFIG_FILE'
+                                )
+                            ]) {
+                                dir('terraform/kubernetes') {
+                                    sh '''
+                                        set -eu
+
+                                        # Kubernetes authentication
+                                        export KUBECONFIG="$KUBE_CONFIG_FILE"
+                                        export KUBE_CONFIG_PATH="$KUBE_CONFIG_FILE"
+
+                                        echo "========== Terraform Version =========="
+                                        terraform version
+
+                                        echo "========== Verify Kubernetes Access =========="
+                                        kubectl auth can-i create deployments \
+                                        -n streamlit-terraform | grep -qx yes
+
+                                        kubectl auth can-i patch deployments \
+                                        -n streamlit-terraform | grep -qx yes
+
+                                        kubectl auth can-i create services \
+                                        -n streamlit-terraform | grep -qx yes
+
+                                        echo "========== Terraform Init =========="
+                                        terraform init -input=false
+
+                                        echo "========== Terraform Format =========="
+                                        terraform fmt -check -recursive
+
+                                        echo "========== Terraform Validate =========="
+                                        terraform validate
+
+                                        echo "========== Terraform Plan =========="
+                                        set +e
+
+                                        terraform plan \
+                                        -input=false \
+                                        -lock-timeout=5m \
+                                        -detailed-exitcode \
+                                        -var="image_repo=$IMAGE_REPO" \
+                                        -var="image_tag=$IMAGE_TAG" \
+                                        -out=tfplan
+
+                                        PLAN_EXIT=$?
+                                        set -e
+
+                                        if [ "$PLAN_EXIT" -eq 1 ]; then
+                                            echo "Terraform plan failed!"
+                                            exit 1
+                                        fi
+
+                                        if [ "$PLAN_EXIT" -eq 2 ]; then
+                                            echo "Changes detected. Applying..."
+
+                                            terraform apply \
+                                            -input=false \
+                                            -lock-timeout=5m \
+                                            tfplan
+
+                                        else
+                                            echo "No infrastructure changes detected."
+                                        fi
+
+                                        echo "========== Verify Deployment =========="
+                                        kubectl rollout status \
+                                        deployment/streamlit-deploy \
+                                        -n streamlit-terraform \
+                                        --timeout=180s
+
+                                        echo "========== Terraform Outputs =========="
+                                        terraform output
+
+                                        echo "========== Deployment Complete =========="
+                                    '''
+                                }
+                            }
+                        }
+                    }
+
+                    post {
+                        always {
+                            dir('terraform/kubernetes') {
+                                sh '''
+                                    rm -f tfplan
+                                    echo "Terraform temporary plan removed."
+                                '''
+                            }
+                        }
+                    }
+                }
+
 
             }
         }    

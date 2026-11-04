@@ -1,8 +1,9 @@
 
+
 variable "kubeconfig_path" {
-  description = "Kubernetes kubeconfig file path"
+  description = "Path to the Kubernetes kubeconfig"
   type        = string
-  default     = "~/.kube/config"
+  sensitive   = true
 }
 
 variable "image_repo" {

@@ -19,7 +19,7 @@ provider "kubernetes" {
 # Streamlit Deployment
 resource "kubernetes_deployment_v1" "streamlit" {
   metadata {
-    name      = "streamlit"
+    name      = "streamlit-deploy"
     namespace = "streamlit-terraform"
     labels = {
       app = "streamlit"

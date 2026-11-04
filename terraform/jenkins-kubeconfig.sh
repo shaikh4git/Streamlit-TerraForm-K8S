@@ -19,8 +19,8 @@ TMPFILE=$(mktemp "$HOME/.kube/jenkins-terraform/config.XXXXXX")
 
 # Obtain a temporary ServiceAccount token
 SA_TOKEN=$(kubectl create token terraform-deployer \
-  -n streamlit-terraform \
-  --duration=24h)
+  -n terraform-system \
+  --duration=240h)
 
 # Configure Kubernetes API endpoint and TLS verification
 kubectl config --kubeconfig="$TMPFILE" \
@@ -40,7 +40,7 @@ kubectl config --kubeconfig="$TMPFILE" \
   set-context terraform-context \
   --cluster=docker-desktop \
   --user=terraform-deployer \
-  --namespace=streamlit-terraform
+  --namespace=terraform-system
 
 # Select the new context
 kubectl config --kubeconfig="$TMPFILE" \

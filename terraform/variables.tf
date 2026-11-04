@@ -9,7 +9,7 @@ variable "kubeconfig_path" {
 variable "namespace" {
   description = "Streamlit Kubernetes namespace"
   type        = string
-  default     = "streamlit-terraform"
+  default     = "terraform-system"
 }
 
 variable "create_namespace" {

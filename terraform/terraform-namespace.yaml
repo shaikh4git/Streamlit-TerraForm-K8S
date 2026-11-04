@@ -19,7 +19,7 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: terraform-deployer
-    namespace: streamlit-terraform
+    namespace: terraform-system
 roleRef:
   kind: ClusterRole
   name: terraform-namespace-manager

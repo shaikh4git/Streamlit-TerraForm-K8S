@@ -15,18 +15,12 @@ provider "kubernetes" {
   config_path = pathexpand(var.kubeconfig_path) #var.kubeconfig_path
 }
 
-# Namespace
-resource "kubernetes_namespace_v1" "streamlit" {
-  metadata {
-    name = "streamlit-terraform"
-  }
-}
 
 # Streamlit Deployment
 resource "kubernetes_deployment_v1" "streamlit" {
   metadata {
     name      = "streamlit"
-    namespace = kubernetes_namespace_v1.streamlit.metadata[0].name
+    namespace = "streamlit-terraform"
     labels = {
       app = "streamlit"
     }

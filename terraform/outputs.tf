@@ -1,7 +1,6 @@
 
 output "namespace" {
-  description = "Namespace where Streamlit is deployed"
-  value       = "streamlit-terraform"
+  value = kubernetes_namespace_v1.streamlit.metadata[0].name
 }
 
 output "deployment_name" {

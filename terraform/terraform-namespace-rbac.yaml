@@ -1,0 +1,26 @@
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: terraform-namespace-manager
+rules:
+  - apiGroups: [""]
+    resources: ["namespaces"]
+    verbs:
+      - get
+      - create
+      - update
+      - patch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: terraform-namespace-manager-binding
+subjects:
+  - kind: ServiceAccount
+    name: terraform-deployer
+    namespace: streamlit-terraform
+roleRef:
+  kind: ClusterRole
+  name: terraform-namespace-manager
+  apiGroup: rbac.authorization.k8s.io

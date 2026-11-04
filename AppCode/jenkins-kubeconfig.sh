@@ -6,8 +6,7 @@ mkdir -p "$HOME/.kube/jenkins-terraform"
 KUBEFILE="$HOME/.kube/jenkins-terraform/config"
 
 # Read the Kubernetes API URL
-API_SERVER=$(kubectl config view --minify \
-  -o jsonpath='{.clusters[0].cluster.server}')
+API_SERVER=https://host.docker.internal:6443
 
 # Extract the cluster CA certificate
 kubectl config view --raw --minify \

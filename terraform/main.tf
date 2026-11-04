@@ -15,12 +15,28 @@ provider "kubernetes" {
   config_path = pathexpand(var.kubeconfig_path) #var.kubeconfig_path
 }
 
+# Name space creation if it doesnt exist
+
+resource "kubernetes_namespace_v1" "streamlit" {
+  metadata {
+    name = "streamlit-terraform"
+
+    labels = {
+      "app.kubernetes.io/managed-by" = "terraform"
+    }
+  }
+
+  lifecycle {
+    prevent_destroy = true
+  }
+}
+
 
 # Streamlit Deployment
 resource "kubernetes_deployment_v1" "streamlit" {
   metadata {
     name      = "streamlit-deploy"
-    namespace = "streamlit-terraform"
+    namespace = kubernetes_namespace_v1.streamlit.metadata[0].name
     labels = {
       app = "streamlit"
     }
@@ -94,7 +110,7 @@ resource "kubernetes_deployment_v1" "streamlit" {
 resource "kubernetes_service_v1" "streamlit" {
   metadata {
     name      = "streamlit-service"
-    namespace = "streamlit-terraform"
+    namespace = kubernetes_namespace_v1.streamlit.metadata[0].name
   }
 
   spec {

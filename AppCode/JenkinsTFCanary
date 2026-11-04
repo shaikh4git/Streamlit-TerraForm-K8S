@@ -215,6 +215,7 @@ pipeline {
                                         -input=false \
                                         -lock-timeout=5m \
                                         -detailed-exitcode \
+                                        -var="kubeconfig_path=$KUBE_CONFIG_PATH" \
                                         -var="image_repo=$IMAGE_REPO" \
                                         -var="image_tag=$IMAGE_TAG" \
                                         -out=tfplan

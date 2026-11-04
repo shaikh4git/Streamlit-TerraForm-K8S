@@ -10,7 +10,7 @@ terraform {
   }
 }
 
-# Kubernetes provider configuration
+# Kubernetes provider configuration!
 provider "kubernetes" {
   config_path = pathexpand(var.kubeconfig_path) #var.kubeconfig_path
 }

@@ -101,24 +101,6 @@ pipeline {
                     }
                 }
 
-
-
-                stage("Sonarqube Analysis "){
-                    steps{
-                        withSonarQubeEnv('sonar-server') {
-                            sh ''' /opt/sonar-scanner/bin/sonar-scanner -Dsonar.projectName=Streamlit \
-                            -Dsonar.projectKey=Streamlit '''
-                        }
-                    }
-                }
-                stage("quality gate"){
-                    steps {
-                        script {
-                            waitForQualityGate abortPipeline: false, credentialsId: 'Sonar-token' 
-                        }
-                    } 
-                }
-                
                 stage('Streamlit Application Testing') {
                     steps {
                         sh '''
@@ -133,22 +115,7 @@ pipeline {
                     }
                 }                
 
-                stage('OWASP FS SCAN') {
-                    steps {
-                        sh 'echo "Thirdparty Dependencies Check, skipping for now!! " ' 
-                      //   dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit', odcInstallation: 'DP-Check'
-                        // dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
-                    }
-                }
-                
-                
-                stage('TRIVY FS SCAN') {
-                    steps {
-                        sh "trivy fs . "
-                        sh "trivy fs . > trivyfs.txt"
-                    }
-                } 
-
+              
                 stage('Docker Build Streamlit Image') {
                     steps {
                         sh '''
@@ -163,12 +130,6 @@ pipeline {
                         '''
                     }
                 }
-
-                 stage("TRIVY"){
-                    steps{
-                        sh "trivy image $FULL_IMAGE > trivyimage.txt" 
-                    }
-                } 
 
                 stage('Docker Push to Docker Hub') {
                     steps {
@@ -305,28 +266,8 @@ pipeline {
                         }
                     }
                 }
-
-
             }
         }    
     }
-
-    post {
-        always {
-            emailext(
-                    attachLog: true,
-                    subject: "${currentBuild.currentResult}",
-                    body: """
-                        Project: ${env.JOB_NAME}<br/>
-                        Build: ${env.BUILD_NUMBER}<br/>
-                        Image: ${env.FULL_IMAGE ?: 'Not built'}<br/>
-                        URL: ${env.BUILD_URL}<br/>
-                    """,
-                    to: 'shaikh4huda@gmail.com',
-                    attachmentsPattern: 'trivyfs.txt,trivyimage.txt'
-                    )
-                }
-    }        
-       
-        
+              
 }

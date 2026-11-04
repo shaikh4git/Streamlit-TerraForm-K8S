@@ -157,7 +157,7 @@ pipeline {
                             docker buildx build \
                                 --tag "$FULL_IMAGE" \
                                 --load \
-                                .
+                                AppCode/.
 
                             echo "Docker image built successfully"
                         '''

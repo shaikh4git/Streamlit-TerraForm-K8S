@@ -1,48 +1,51 @@
-
-# Keep generated credentials out of Git
+set -eu
 umask 077
-mkdir -p "$HOME/.kube/jenkins-terraform"
 
 KUBEFILE="$HOME/.kube/jenkins-terraform/config"
+CAFILE="$HOME/.kube/jenkins-terraform/ca.crt"
 
-# Read the Kubernetes API URL
-API_SERVER=https://host.docker.internal:6443
+mkdir -p "$HOME/.kube/jenkins-terraform"
 
-# Extract the cluster CA certificate
-kubectl config view --raw --minify \
-  -o jsonpath='{.clusters[0].cluster.certificate-authority-data}' \
-  | base64 -D \
-  > "$HOME/.kube/jenkins-terraform/ca.crt"
+# Make sure the CA certificate already exists
+test -s "$CAFILE"
 
-# Request a temporary ServiceAccount token
+# Back up the existing custom file, if present
+if [ -f "$KUBEFILE" ]; then
+    cp "$KUBEFILE" "${KUBEFILE}.backup"
+fi
+
+# Generate a new isolated kubeconfig
+TMPFILE=$(mktemp "$HOME/.kube/jenkins-terraform/config.XXXXXX")
+
+# Obtain a temporary ServiceAccount token
 SA_TOKEN=$(kubectl create token terraform-deployer \
   -n streamlit-terraform \
   --duration=24h)
 
-# Configure Kubernetes cluster
-kubectl config --kubeconfig="$KUBEFILE" \
+# Configure Kubernetes API endpoint and TLS verification
+kubectl config --kubeconfig="$TMPFILE" \
   set-cluster docker-desktop \
-  --server="$API_SERVER" \
-  --certificate-authority="$HOME/.kube/jenkins-terraform/ca.crt" \
-  --embed-certs=true
+  --server=https://host.docker.internal:6443 \
+  --certificate-authority="$CAFILE" \
+  --embed-certs=true \
+  --tls-server-name=kubernetes.default.svc
 
-# Configure ServiceAccount credentials
-kubectl config --kubeconfig="$KUBEFILE" \
+# Configure ServiceAccount authentication
+kubectl config --kubeconfig="$TMPFILE" \
   set-credentials terraform-deployer \
   --token="$SA_TOKEN"
 
-# Configure context
-kubectl config --kubeconfig="$KUBEFILE" \
+# Associate cluster and ServiceAccount
+kubectl config --kubeconfig="$TMPFILE" \
   set-context terraform-context \
   --cluster=docker-desktop \
   --user=terraform-deployer \
   --namespace=streamlit-terraform
 
-# Select context
-kubectl config --kubeconfig="$KUBEFILE" \
+# Select the new context
+kubectl config --kubeconfig="$TMPFILE" \
   use-context terraform-context
 
-# Restrict file permissions
-chmod 600 "$KUBEFILE"
-
+chmod 600 "$TMPFILE"
+mv "$TMPFILE" "$KUBEFILE"
 unset SA_TOKEN

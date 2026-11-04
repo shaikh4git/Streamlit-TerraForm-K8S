@@ -101,7 +101,7 @@ pipeline {
                     }
                 }
 
-                stage('Streamlit Application Testing') {
+                stage('Streamlit Application Testing:') {
                     steps {
                         sh '''
                             echo "Checking Python syntax..."

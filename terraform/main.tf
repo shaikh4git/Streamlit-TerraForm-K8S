@@ -94,7 +94,7 @@ resource "kubernetes_deployment_v1" "streamlit" {
 resource "kubernetes_service_v1" "streamlit" {
   metadata {
     name      = "streamlit-service"
-    namespace = kubernetes_namespace_v1.streamlit.metadata[0].name
+    namespace = "streamlit-terraform"
   }
 
   spec {

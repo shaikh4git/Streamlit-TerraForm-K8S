@@ -1,0 +1,53 @@
+# .gitignore
+__pycache__/
+*.pyc
+.venv/
+.env
+ansible/*.retry
+ansible/**/vault_pass*
+ansible/**/*.pem
+ansible/inventory/*secret*
+
+# Python temporary files
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+.env
+.env.*
+
+# IDE and macOS
+.DS_Store
+.vscode/
+.idea/
+
+# Logs
+*.log
+logs/
+
+# Security scan reports
+gitleaks-report.json
+trivy-*-report.json
+dependency-check-report.*
+dependency-check-report/
+
+# Test reports and coverage
+.coverage
+htmlcov/
+test-results/
+junit.xml
+
+# Terraform local state
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+crash.log
+
+# Ansible temporary files
+*.retry
+
+# Temporary files
+*.tmp
+*.bak

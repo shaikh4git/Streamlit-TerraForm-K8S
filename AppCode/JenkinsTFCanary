@@ -123,10 +123,10 @@ pipeline {
                     steps {
                         sh '''
                             echo "Checking Python syntax..."
-                            .venv/bin/python -m py_compile app.py
+                            .venv/bin/python -m py_compile AppCode/app.py
 
                             echo "Running Streamlit unit tests..."
-                            .venv/bin/python -m pytest tests/ -v
+                            .venv/bin/python -m pytest AppCode/tests/ -v
 
                             echo "Streamlit application testing completed!"
                         '''
@@ -201,7 +201,7 @@ pipeline {
                         sh '''
                             ansible-playbook \
                             -i localhost, \
-                            ansible/staging_canary.yaml \
+                            AppCode/ansible/staging_canary.yaml \
                             -e "image_repo=$IMAGE_REPO" \
                             -e "image_tag=$IMAGE_TAG"
                         '''
@@ -217,7 +217,7 @@ pipeline {
                                     variable: 'KUBE_CONFIG_FILE'
                                 )
                             ]) {
-                                dir('terraform/kubernetes') {
+                                dir('terraform') {
                                     sh '''
                                         set -eu
 

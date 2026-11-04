@@ -1,9 +1,21 @@
 
-
 variable "kubeconfig_path" {
-  description = "Path to the Kubernetes kubeconfig"
+  description = "Path to Jenkins kubeconfig Secret file"
   type        = string
   sensitive   = true
+  default     = ""
+}
+
+variable "namespace" {
+  description = "Streamlit Kubernetes namespace"
+  type        = string
+  default     = "streamlit-terraform"
+}
+
+variable "create_namespace" {
+  description = "Whether Terraform should create the namespace"
+  type        = bool
+  default     = false
 }
 
 variable "image_repo" {
@@ -13,7 +25,7 @@ variable "image_repo" {
 }
 
 variable "image_tag" {
-  description = "Docker image tag to deploy"
+  description = "Docker image tag passed by Jenkins"
   type        = string
 }
 
@@ -21,4 +33,9 @@ variable "replicas" {
   description = "Number of Streamlit replicas"
   type        = number
   default     = 2
+
+  validation {
+    condition     = var.replicas >= 1 && floor(var.replicas) == var.replicas
+    error_message = "replicas must be a positive whole number."
+  }
 }

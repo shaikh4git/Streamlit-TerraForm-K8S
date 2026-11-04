@@ -1,25 +1,33 @@
 
 terraform {
-  required_version = ">= 1.9.0"
+  required_version = ">= 1.5.0"
 
   required_providers {
     kubernetes = {
       source  = "hashicorp/kubernetes"
-      version = "~> 3.0"
+      version = ">= 3.4.0, < 4.0.0"
     }
   }
 }
 
-# Kubernetes provider configuration!
+# Jenkins provides the kubeconfig path.
+# If omitted, the provider reads KUBE_CONFIG_PATH.
+/*
 provider "kubernetes" {
-  config_path = pathexpand(var.kubeconfig_path) #var.kubeconfig_path
-}
+  config_path = var.kubeconfig_path != "" ? var.kubeconfig_path : null
+} */
 
-# Name space creation if it doesnt exist
+provider "kubernetes" {}
+
+# ----------------------------------------
+# Conditional Kubernetes Namespace
+# ----------------------------------------
 
 resource "kubernetes_namespace_v1" "streamlit" {
+  count = var.create_namespace ? 1 : 0
+
   metadata {
-    name = "streamlit-terraform"
+    name = var.namespace
 
     labels = {
       "app.kubernetes.io/managed-by" = "terraform"
@@ -31,25 +39,24 @@ resource "kubernetes_namespace_v1" "streamlit" {
   }
 }
 
-
+# ----------------------------------------
 # Streamlit Deployment
+# ----------------------------------------
+
 resource "kubernetes_deployment_v1" "streamlit" {
+
   metadata {
     name      = "streamlit-deploy"
-    namespace = kubernetes_namespace_v1.streamlit.metadata[0].name
+    namespace = var.namespace
+
     labels = {
       app = "streamlit"
     }
   }
 
   spec {
-    replicas = var.replicas
-
-    selector {
-      match_labels = {
-        app = "streamlit"
-      }
-    }
+    replicas               = var.replicas
+    revision_history_limit = 3
 
     strategy {
       type = "RollingUpdate"
@@ -57,6 +64,12 @@ resource "kubernetes_deployment_v1" "streamlit" {
       rolling_update {
         max_surge       = "1"
         max_unavailable = "0"
+      }
+    }
+
+    selector {
+      match_labels = {
+        app = "streamlit"
       }
     }
 
@@ -69,10 +82,9 @@ resource "kubernetes_deployment_v1" "streamlit" {
 
       spec {
         container {
-          name  = "streamlit"
-          image = "${var.image_repo}:${var.image_tag}"
-
-          image_pull_policy = "Always"
+          name              = "streamlit"
+          image             = "${var.image_repo}:${var.image_tag}"
+          image_pull_policy = "IfNotPresent"
 
           port {
             container_port = 8501
@@ -83,8 +95,11 @@ resource "kubernetes_deployment_v1" "streamlit" {
               path = "/_stcore/health"
               port = 8501
             }
+
             initial_delay_seconds = 5
             period_seconds        = 10
+            timeout_seconds       = 1
+            failure_threshold     = 3
           }
 
           resources {
@@ -103,14 +118,24 @@ resource "kubernetes_deployment_v1" "streamlit" {
     }
   }
 
-  wait_for_rollout = true
+  depends_on = [
+    kubernetes_namespace_v1.streamlit
+  ]
 }
 
-# ClusterIP Service
+# ----------------------------------------
+# Streamlit ClusterIP Service
+# ----------------------------------------
+
 resource "kubernetes_service_v1" "streamlit" {
+
   metadata {
     name      = "streamlit-service"
-    namespace = kubernetes_namespace_v1.streamlit.metadata[0].name
+    namespace = var.namespace
+
+    labels = {
+      app = "streamlit"
+    }
   }
 
   spec {
@@ -121,9 +146,12 @@ resource "kubernetes_service_v1" "streamlit" {
     port {
       port        = 80
       target_port = 8501
-      protocol    = "TCP"
     }
 
     type = "ClusterIP"
   }
+
+  depends_on = [
+    kubernetes_namespace_v1.streamlit
+  ]
 }

@@ -11,3 +11,4 @@ crash.*.log
 .terraform.tfstate.lock.info
 *.tfvars.json
 .DS_Store
+/terraform/kubeconfig-bootstrap.yaml

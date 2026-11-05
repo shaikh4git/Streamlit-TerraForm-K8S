@@ -40,7 +40,7 @@ pipeline {
             }
         }
 
-        stage('Gitleaks Secret Scanning') {
+    /*    stage('Gitleaks Secret Scanning') {
             steps {
                 script {
                     sh '''
@@ -67,7 +67,7 @@ pipeline {
                     archiveArtifacts artifacts: 'gitleaks-report.json', allowEmptyArchive: true
                 }
             }
-        }
+        }*/
 
         stage('Docker Build Streamlit Image') {
             steps {

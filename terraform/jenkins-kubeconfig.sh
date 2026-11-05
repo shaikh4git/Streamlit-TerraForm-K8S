@@ -6,10 +6,9 @@ CAFILE="$HOME/.kube/jenkins-terraform/ca.crt"
 
 mkdir -p "$HOME/.kube/jenkins-terraform"
 
-# Make sure the CA certificate already exists
 test -s "$CAFILE"
 
-# Back up the existing custom file, if present
+// Back up the existing custom file, if present
 if [ -f "$KUBEFILE" ]; then
     cp "$KUBEFILE" "${KUBEFILE}.backup"
 fi

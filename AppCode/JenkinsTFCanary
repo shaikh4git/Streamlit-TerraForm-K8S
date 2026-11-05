@@ -161,37 +161,59 @@ pipeline {
                 timeout(time: 5, unit: 'MINUTES') {
                     dir('terraform') {
                         sh '''#!/usr/bin/env bash
-                            set -euo pipefail
+set -euo pipefail
 
-                            export KUBECONFIG="$WORKSPACE/.terraform-auth/sa-kubeconfig.yaml"
-                            export KUBE_CONFIG_PATH="$KUBECONFIG"
+export KUBECONFIG="$WORKSPACE/.terraform-auth/sa-kubeconfig.yaml"
+export KUBE_CONFIG_PATH="$KUBECONFIG"
 
-                            echo "===== Existing Terraform State ====="
-                            terraform state list
+echo "===== Verify Kubernetes Identity ====="
+kubectl auth whoami
 
-                            echo "===== Import Deployment ====="
-                            if ! terraform state list | grep -Fxq 'kubernetes_deployment_v1.streamlit'; then
-                                terraform import \
-                                -var="namespace=streamlit-terraform" \
-                                -var="create_namespace=false" \
-                                -var="image_tag=$IMAGE_TAG" \
-                                kubernetes_deployment_v1.streamlit \
-                                streamlit-terraform/streamlit-deploy
-                            fi
+echo "===== Verify Existing Resources ====="
+kubectl get deployment streamlit-deploy -n streamlit-terraform
+kubectl get service streamlit-service -n streamlit-terraform
 
-                            echo "===== Import Service ====="
-                            if ! terraform state list | grep -Fxq 'kubernetes_service_v1.streamlit'; then
-                                terraform import \
-                                -var="namespace=streamlit-terraform" \
-                                -var="create_namespace=false" \
-                                -var="image_tag=$IMAGE_TAG" \
-                                kubernetes_service_v1.streamlit \
-                                streamlit-terraform/streamlit-service
-                            fi
+echo "===== Check Terraform State ====="
 
-                            echo "===== Terraform State After Import ====="
-                            terraform state list
-                        '''
+# An empty state is expected on an initial import.
+# Do not terminate merely because state list is empty.
+STATE_LIST="$(terraform state list 2>/dev/null || true)"
+
+if echo "$STATE_LIST" |
+   grep -Fxq 'kubernetes_deployment_v1.streamlit'; then
+    echo "Deployment already in Terraform state."
+else
+    echo "Importing existing Deployment..."
+
+    terraform import \
+      -input=false \
+      -var="namespace=streamlit-terraform" \
+      -var="create_namespace=false" \
+      -var="image_tag=$IMAGE_TAG" \
+      kubernetes_deployment_v1.streamlit \
+      streamlit-terraform/streamlit-deploy
+fi
+
+STATE_LIST="$(terraform state list 2>/dev/null || true)"
+
+if echo "$STATE_LIST" |
+   grep -Fxq 'kubernetes_service_v1.streamlit'; then
+    echo "Service already in Terraform state."
+else
+    echo "Importing existing Service..."
+
+    terraform import \
+      -input=false \
+      -var="namespace=streamlit-terraform" \
+      -var="create_namespace=false" \
+      -var="image_tag=$IMAGE_TAG" \
+      kubernetes_service_v1.streamlit \
+      streamlit-terraform/streamlit-service
+fi
+
+echo "===== Terraform State After Import ====="
+terraform state list
+'''
                     }
                 }
             }

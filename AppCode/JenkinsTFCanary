@@ -281,5 +281,76 @@ terraform state list
                 }
             }
         }
+
+        stage('Terraform Outputs & Deployment Verification') {
+            steps {
+                timeout(time: 5, unit: 'MINUTES') {
+                    dir('terraform') {
+                        sh '''#!/usr/bin/env bash
+                            set -euo pipefail
+
+                            export KUBECONFIG="$WORKSPACE/.terraform-auth/sa-kubeconfig.yaml"
+                            export KUBE_CONFIG_PATH="$KUBECONFIG"
+
+                            echo "========================================"
+                            echo "       TERRAFORM OUTPUT VALUES"
+                            echo "========================================"
+
+                            terraform output
+
+                            echo ""
+                            echo "===== Retrieve Individual Outputs ====="
+
+                            NAMESPACE="$(terraform output -raw namespace)"
+                            DEPLOYMENT="$(terraform output -raw deployment_name)"
+                            SERVICE="$(terraform output -raw service_name)"
+                            IMAGE="$(terraform output -raw deployed_image)"
+                            MANAGED="$(terraform output -raw namespace_managed_by_terraform)"
+
+                            echo "Namespace          : $NAMESPACE"
+                            echo "Terraform Managed  : $MANAGED"
+                            echo "Deployment         : $DEPLOYMENT"
+                            echo "Service            : $SERVICE"
+                            echo "Docker Image       : $IMAGE"
+
+                            echo ""
+                            echo "===== Verify Kubernetes Deployment ====="
+
+                            kubectl rollout status \
+                            deployment/"$DEPLOYMENT" \
+                            -n "$NAMESPACE" \
+                            --timeout=120s
+
+                            echo ""
+                            echo "===== Verify Actual Running Image ====="
+
+                            kubectl get deployment "$DEPLOYMENT" \
+                            -n "$NAMESPACE" \
+                            -o jsonpath='{.spec.template.spec.containers[0].image}'
+
+                            echo ""
+                            echo ""
+                            echo "===== Verify Kubernetes Service ====="
+
+                            kubectl get service "$SERVICE" \
+                            -n "$NAMESPACE"
+
+                            echo ""
+                            echo "===== List Application Pods ====="
+
+                            kubectl get pods \
+                            -n "$NAMESPACE" \
+                            -l app=streamlit \
+                            -o wide
+
+                            echo ""
+                            echo "========================================"
+                            echo "    STREAMLIT DEPLOYMENT SUCCESSFUL"
+                            echo "========================================"
+                        '''
+                    }
+                }
+            }
+        }
     }
 }

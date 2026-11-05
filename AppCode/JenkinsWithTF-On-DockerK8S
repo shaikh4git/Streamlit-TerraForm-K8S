@@ -169,21 +169,19 @@ export KUBE_CONFIG_PATH="$KUBECONFIG"
 echo "===== Verify Kubernetes Identity ====="
 kubectl auth whoami
 
-echo "===== Verify Existing Resources ====="
-kubectl get deployment streamlit-deploy -n streamlit-terraform
-kubectl get service streamlit-service -n streamlit-terraform
-
 echo "===== Check Terraform State ====="
 
-# An empty state is expected on an initial import.
-# Do not terminate merely because state list is empty.
 STATE_LIST="$(terraform state list 2>/dev/null || true)"
 
-if echo "$STATE_LIST" |
-   grep -Fxq 'kubernetes_deployment_v1.streamlit'; then
-    echo "Deployment already in Terraform state."
-else
-    echo "Importing existing Deployment..."
+echo "===== Check Existing Deployment ====="
+
+if echo "$STATE_LIST" | grep -Fxq 'kubernetes_deployment_v1.streamlit'; then
+    echo "Deployment already managed by Terraform."
+
+elif kubectl get deployment streamlit-deploy \
+     -n streamlit-terraform >/dev/null 2>&1; then
+
+    echo "Deployment exists. Importing..."
 
     terraform import \
       -input=false \
@@ -192,15 +190,22 @@ else
       -var="image_tag=$IMAGE_TAG" \
       kubernetes_deployment_v1.streamlit \
       streamlit-terraform/streamlit-deploy
+
+else
+    echo "Deployment not found. Terraform will create it."
 fi
 
 STATE_LIST="$(terraform state list 2>/dev/null || true)"
 
-if echo "$STATE_LIST" |
-   grep -Fxq 'kubernetes_service_v1.streamlit'; then
-    echo "Service already in Terraform state."
-else
-    echo "Importing existing Service..."
+echo "===== Check Existing Service ====="
+
+if echo "$STATE_LIST" | grep -Fxq 'kubernetes_service_v1.streamlit'; then
+    echo "Service already managed by Terraform."
+
+elif kubectl get service streamlit-service \
+     -n streamlit-terraform >/dev/null 2>&1; then
+
+    echo "Service exists. Importing..."
 
     terraform import \
       -input=false \
@@ -209,10 +214,14 @@ else
       -var="image_tag=$IMAGE_TAG" \
       kubernetes_service_v1.streamlit \
       streamlit-terraform/streamlit-service
+
+else
+    echo "Service not found. Terraform will create it."
 fi
 
-echo "===== Terraform State After Import ====="
-terraform state list
+echo "===== Final Terraform State ====="
+
+terraform state list || true
 '''
                     }
                 }

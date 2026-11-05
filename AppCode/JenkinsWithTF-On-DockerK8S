@@ -110,7 +110,7 @@ pipeline {
                             set +x
                             umask 077
 
-                            echo "===== Verify Bootstrap Authentication ====="
+                            echo "===== Verify Bootstrap Authentication ======"
                             kubectl --kubeconfig="$BOOTSTRAP_KUBECONFIG" auth whoami
 
                             mkdir -p "$WORKSPACE/.terraform-auth"

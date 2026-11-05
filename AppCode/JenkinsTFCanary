@@ -12,12 +12,10 @@ pipeline {
     }
 
     stages {
-
-
         stage('Clean Workspaces!!') {
             steps { cleanWs() }
-                }
- 
+        }
+
         stage('Checkout GitHub') {
             steps {
                 checkout(
@@ -42,232 +40,183 @@ pipeline {
             }
         }
 
-        
-        stage ('Run only for relevant changes!!!') {
-            when {
-                anyOf {
-                    changeset "AppCode/app.py"
-                    changeset "AppCode/Dockerfile"
-                    changeset "AppCode/requirements.txt"
-                    changeset "AppCode/JenkinsTFCanary"
-                    changeset "AppCode/tests/test_app.py"
-                    changeset "AppCode/ansible/staging_canary.yaml"
-                    changeset "terraform/main.tf"
-                    changeset "terraform/outputs.tf"
-                    changeset "terraform/variables.tf"
-                    changeset "terraform/terrafom.tfvars"
+        stage('Gitleaks Secret Scanning') {
+            steps {
+                script {
+                    sh '''
+                        echo "Checking Git repository history..."
+
+                        if [ "$(git rev-parse --is-shallow-repository)" = "true" ]; then
+                            git fetch --unshallow
+                        else
+                            echo "Repository already has full history."
+                        fi
+
+                        echo "Starting Gitleaks security scan..."
+
+                        gitleaks git . \
+                            --redact \
+                            --report-format json \
+                            --report-path gitleaks-report.json
+                    '''
                 }
             }
 
-            stages {
-             
-                stage('Gitleaks Secret Scanning') {
-                    steps {
-                        script {
-                            sh '''
-                                echo "Checking Git repository history..."
-
-                                if [ "$(git rev-parse --is-shallow-repository)" = "true" ]; then
-                                    git fetch --unshallow
-                                else
-                                    echo "Repository already has full history."
-                                fi
-
-                                echo "Starting Gitleaks security scan..."
-
-                                gitleaks git . \
-                                    --redact \
-                                    --report-format json \
-                                    --report-path gitleaks-report.json
-                            '''
-                        }
-                    }
-
-                    post {
-                        always {
-                        archiveArtifacts artifacts: 'gitleaks-report.json', allowEmptyArchive: true
-                        }
-                    }
+            post {
+                always {
+                    archiveArtifacts artifacts: 'gitleaks-report.json', allowEmptyArchive: true
                 }
-              
-                stage('Docker Build Streamlit Image') {
-                    steps {
-                        sh '''
-                            echo "Building Docker image: $FULL_IMAGE"
+            }
+        }
 
-                            docker buildx build \
-                                --tag "$FULL_IMAGE" \
-                                --load \
-                                AppCode/.
+        stage('Docker Build Streamlit Image') {
+            steps {
+                sh '''
+                    echo "Building Docker image: $FULL_IMAGE"
 
-                            echo "Docker image built successfully"
+                    docker buildx build \
+                        --tag "$FULL_IMAGE" \
+                        --load \
+                        AppCode/.
+
+                    echo "Docker image built successfully"
+                '''
+            }
+        }
+
+        stage('Deploy to Docker Desktop Staging - via Ansible') {
+            steps {
+                sh '''
+                    ansible-playbook \
+                        -i localhost, \
+                        AppCode/ansible/staging_canary.yaml \
+                        -e "image_repo=$IMAGE_REPO" \
+                        -e "image_tag=$IMAGE_TAG"
+                '''
+            }
+        }
+
+        stage('Generate Kubernetes ServiceAccount Kubeconfig') {
+            steps {
+                timeout(time: 3, unit: 'MINUTES') {
+                    withCredentials([
+                        file(
+                            credentialsId: 'kubeconfig-bootstrap',
+                            variable: 'BOOTSTRAP_KUBECONFIG'
+                        )
+                    ]) {
+                        sh '''#!/usr/bin/env bash
+                            set -euo pipefail
+                            set +x
+                            umask 077
+
+                            echo "===== Verify Bootstrap Authentication ====="
+                            kubectl --kubeconfig="$BOOTSTRAP_KUBECONFIG" auth whoami
+
+                            mkdir -p "$WORKSPACE/.terraform-auth"
+                            chmod 700 "$WORKSPACE/.terraform-auth"
+
+                            echo "===== Generate Fresh SA Token and Kubeconfig ====="
+
+                            bash scripts/generate-sa-kubeconfig.sh \
+                                "$WORKSPACE/.terraform-auth/sa-kubeconfig.yaml"
+
+                            echo "ServiceAccount kubeconfig generated."
                         '''
                     }
                 }
+            }
+        }
 
-                stage('Docker Push to Docker Hub') {
-                    steps {
-                        withCredentials([
-                            string(
-                                credentialsId: 'docker_cred',
-                                variable: 'DOCKER_API_KEY'
-                            )
-                        ]) {
-                            sh '''
-                                set -e
-                                set +x
+        stage('Terraform Init and Validate') {
+            steps {
+                timeout(time: 3, unit: 'MINUTES') {
+                    dir('terraform') {
+                        sh '''#!/usr/bin/env bash
+                            set -euo pipefail
 
-                                echo "$DOCKER_API_KEY" |
-                                    docker login -u shaikhdocker --password-stdin
+                            export KUBECONFIG="$WORKSPACE/.terraform-auth/sa-kubeconfig.yaml"
+                            export KUBE_CONFIG_PATH="$KUBECONFIG"
 
-                                echo "Pushing image: $FULL_IMAGE"
+                            echo "===== Verify ServiceAccount Identity ====="
+                            kubectl auth whoami
 
-                                docker push "$FULL_IMAGE"
+                            echo "===== Verify Kubernetes Access ====="
+                            kubectl auth can-i create deployments \
+                                -n streamlit-terraform | grep -qx yes
 
-                                echo "Docker image pushed successfully"
-                            '''
-                        }
-                    }
-                }
+                            echo "===== Terraform Init ====="
+                            terraform init -input=false
 
-
-                stage('Deploy to Docker Desktop Staging - via Ansible') {
-                    steps {
-                        sh '''
-                            ansible-playbook \
-                            -i localhost, \
-                            AppCode/ansible/staging_canary.yaml \
-                            -e "image_repo=$IMAGE_REPO" \
-                            -e "image_tag=$IMAGE_TAG"
+                            echo "===== Terraform Validate ====="
+                            terraform validate
                         '''
                     }
-                } 
+                }
+            }
+        }
 
+        stage('Terraform Plan Streamlit') {
+            steps {
+                timeout(time: 5, unit: 'MINUTES') {
+                    dir('terraform') {
+                        sh '''#!/usr/bin/env bash
+                            set -euo pipefail
+                            umask 077
 
-                stage('Generate Kubernetes ServiceAccount Kubeconfig') {
-                    steps {
-                        timeout(time: 3, unit: 'MINUTES') {
-                            withCredentials([
-                                file(
-                                    credentialsId: 'kubeconfig-bootstrap',
-                                    variable: 'BOOTSTRAP_KUBECONFIG'
-                                )
-                            ]) {
-                                sh '''#!/usr/bin/env bash
-                set -euo pipefail
-                set +x
-                umask 077
+                            export KUBECONFIG="$WORKSPACE/.terraform-auth/sa-kubeconfig.yaml"
+                            export KUBE_CONFIG_PATH="$KUBECONFIG"
 
-                echo "===== Verify Bootstrap Authentication ====="
-                kubectl --kubeconfig="$BOOTSTRAP_KUBECONFIG" auth whoami
+                            echo "===== Terraform Plan ====="
 
-                mkdir -p "$WORKSPACE/.terraform-auth"
-                chmod 700 "$WORKSPACE/.terraform-auth"
+                            terraform plan \
+                                -input=false \
+                                -var="namespace=streamlit-terraform" \
+                                -var="create_namespace=false" \
+                                -var="image_tag=$IMAGE_TAG" \
+                                -out="$WORKSPACE/.terraform-auth/tfplan"
 
-                echo "===== Generate Fresh SA Token and Kubeconfig ====="
-
-                bash scripts/generate-sa-kubeconfig.sh \
-                "$WORKSPACE/.terraform-auth/sa-kubeconfig.yaml"
-
-                echo "ServiceAccount kubeconfig generated."
-                '''
-                            }
-                        }
+                            echo "Terraform plan generated."
+                        '''
                     }
                 }
+            }
+        }
 
-                stage('Terraform Init and Validate') {
-                    steps {
-                        timeout(time: 3, unit: 'MINUTES') {
-                            dir('terraform') {
-                                sh '''#!/usr/bin/env bash
-                set -euo pipefail
+        stage('Terraform Apply Streamlit') {
+            steps {
+                timeout(time: 5, unit: 'MINUTES') {
+                    dir('terraform') {
+                        sh '''#!/usr/bin/env bash
+                            set -euo pipefail
 
-                export KUBECONFIG="$WORKSPACE/.terraform-auth/sa-kubeconfig.yaml"
-                export KUBE_CONFIG_PATH="$KUBECONFIG"
+                            export KUBECONFIG="$WORKSPACE/.terraform-auth/sa-kubeconfig.yaml"
+                            export KUBE_CONFIG_PATH="$KUBECONFIG"
 
-                echo "===== Verify ServiceAccount Identity ====="
-                kubectl auth whoami
+                            echo "===== Terraform Apply ====="
 
-                echo "===== Verify Kubernetes Access ====="
-                kubectl auth can-i create deployments \
-                -n streamlit-terraform | grep -qx yes
-
-                echo "===== Terraform Init ====="
-                terraform init -input=false
-
-                echo "===== Terraform Validate ====="
-                terraform validate
-                '''
-                            }
-                        }
-                    }
-                }
-
-                stage('Terraform Plan Streamlit') {
-                    steps {
-                        timeout(time: 5, unit: 'MINUTES') {
-                            dir('terraform') {
-                                sh '''#!/usr/bin/env bash
-                set -euo pipefail
-                umask 077
-
-                export KUBECONFIG="$WORKSPACE/.terraform-auth/sa-kubeconfig.yaml"
-                export KUBE_CONFIG_PATH="$KUBECONFIG"
-
-                echo "===== Terraform Plan ====="
-
-                terraform plan \
-                -input=false \
-                -var="namespace=streamlit-terraform" \
-                -var="create_namespace=false" \
-                -var="image_tag=$IMAGE_TAG" \
-                -out="$WORKSPACE/.terraform-auth/tfplan"
-
-                echo "Terraform plan generated."
-                '''
-                            }
-                        }
-                    }
-                }
-
-                stage('Terraform Apply Streamlit') {
-                    steps {
-                        timeout(time: 5, unit: 'MINUTES') {
-                            dir('terraform') {
-                                sh '''#!/usr/bin/env bash
-                                set -euo pipefail
-
-                                export KUBECONFIG="$WORKSPACE/.terraform-auth/sa-kubeconfig.yaml"
-                                export KUBE_CONFIG_PATH="$KUBECONFIG"
-
-                                echo "===== Terraform Apply ====="
-
-                                terraform apply \
+                            terraform apply \
                                 -input=false \
                                 -auto-approve \
                                 "$WORKSPACE/.terraform-auth/tfplan"
 
-                                echo "===== Verify Kubernetes Deployment ====="
+                            echo "===== Verify Kubernetes Deployment ====="
 
-                                kubectl rollout status \
+                            kubectl rollout status \
                                 deployment/streamlit-deploy \
                                 -n streamlit-terraform \
                                 --timeout=120s
 
-                                echo "===== Running Resources ====="
+                            echo "===== Running Resources ====="
 
-                                kubectl get deployments,services,pods \
+                            kubectl get deployments,services,pods \
                                 -n streamlit-terraform
 
-                                echo "Streamlit Kubernetes deployment successful."
-                                '''
-                            }
-                        }
+                            echo "Streamlit Kubernetes deployment successful."
+                        '''
                     }
                 }
             }
-        }    
+        }
     }
-              
 }

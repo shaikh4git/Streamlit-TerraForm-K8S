@@ -21,6 +21,12 @@
         restart_policy: unless-stopped
         published_ports:
           - "127.0.0.1:{{ staging_port }}:8501"
+        networks:
+          - name: jenkins
+
+        networks_cli_compatible: true
+        comparisons:
+          networks: strict
 
     - name: Verify Streamlit health
       ansible.builtin.uri:
@@ -35,3 +41,5 @@
     - name: Display deployment result
       ansible.builtin.debug:
         msg: "Streamlit staging is healthy at the URL- http://localhost:{{ staging_port }}!! for the Image: {{ image_repo }}:{{ image_tag }}"
+   
+          

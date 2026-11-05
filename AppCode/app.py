@@ -11,8 +11,8 @@ st.set_page_config(
 )
 
 # 2. Main heading
-st.title("🚀 My First Streamlit App")
-st.write("Learn Streamlit by building interactive features.")
+st.title("🚀 Streamlit App")
+st.write("Developed by Shaikh S Huda, Kochi, November 5, 2026!!")
 
 # 3. Sidebar navigation
 st.sidebar.title("Navigation")
@@ -28,9 +28,9 @@ if page == "Home":
 
     st.markdown("""
     ### What can Streamlit do?
-    - Build interactive web applications
+    - Build interactive web applications 
     - Create data science dashboards
-    - Visualize datasets
+    - Visualize datasets - charts, graphs, and tables etc. (Upload your own CSV files on your left radio button).
     - Build AI/ML interfaces
     """)
 

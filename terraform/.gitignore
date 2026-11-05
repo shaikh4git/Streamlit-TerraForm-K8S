@@ -7,6 +7,8 @@ ansible/*.retry
 ansible/**/vault_pass*
 ansible/**/*.pem
 ansible/inventory/*secret*
+terraform/kubeconfig-bootstrap.yaml
+
 
 # Python temporary files
 __pycache__/
@@ -51,3 +53,4 @@ crash.log
 # Temporary files
 *.tmp
 *.bak
+

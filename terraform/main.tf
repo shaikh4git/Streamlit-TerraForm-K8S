@@ -20,7 +20,7 @@ provider "kubernetes" {
 provider "kubernetes" {}
 
 # ----------------------------------------
-# Conditional Kubernetes Namespace
+# Conditional Kubernetes Namespacesd
 # ----------------------------------------
 
 resource "kubernetes_namespace_v1" "streamlit" {

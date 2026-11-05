@@ -34,9 +34,9 @@ resource "kubernetes_namespace_v1" "streamlit" {
     }
   }
 
-  lifecycle {
+  /*lifecycle {
     prevent_destroy = true
-  }
+  }*/
 }
 
 # ----------------------------------------

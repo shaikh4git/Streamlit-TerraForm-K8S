@@ -1,0 +1,86 @@
+
+# Permanent namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: terraform-system
+---
+# Permanent ServiceAccount
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: terraform-deployer
+  namespace: terraform-system
+---
+# Reusable application permissions
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: terraform-manager-role
+rules:
+  - apiGroups: ["apps"]
+    resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+
+  - apiGroups: [""]
+    resources:
+      - services
+      - configmaps
+      - persistentvolumeclaims
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs:
+      - get
+      - list
+      - watch
+
+  - apiGroups: ["networking.k8s.io"]
+    resources:
+      - ingresses
+      - networkpolicies
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+---
+# Authorize the SA in the application namespace
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: streamlit-deployer-binding
+  namespace: streamlit-terraform
+subjects:
+  - kind: ServiceAccount
+    name: terraform-deployer
+    namespace: terraform-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: terraform-manager-role
+---
+# Allow the bootstrap identity to mint temporary SA tokens
+# In this design the bootstrap identity is the Docker Desktop
+# administrator, so no additional TokenRequest role is needed.

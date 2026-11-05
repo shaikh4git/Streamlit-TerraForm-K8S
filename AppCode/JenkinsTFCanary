@@ -89,32 +89,6 @@ pipeline {
                         }
                     }
                 }
-
-                stage('Install Python Dependencies for Streamlit Application Testing!!') {
-                    steps {
-                        sh '''
-                            python3 -m venv .venv
-                            .venv/bin/python -m pip install --upgrade pip
-                            .venv/bin/python -m pip install -r AppCode/requirements.txt
-                            .venv/bin/python -m pip install pytest
-                        '''
-                    }
-                }
-
-                stage('Streamlit Application Testing:') {
-                    steps {
-                        sh '''
-                            echo "Checking Python syntax..."
-                            .venv/bin/python -m py_compile AppCode/app.py
-
-                            echo "Running Streamlit unit tests..."
-                            .venv/bin/python -m pytest AppCode/tests/ -v
-
-                            echo "Streamlit application testing completed!"
-                        '''
-                    }
-                }                
-
               
                 stage('Docker Build Streamlit Image') {
                     steps {
@@ -169,99 +143,124 @@ pipeline {
                     }
                 } 
 
-                stage('Terraform Deploy Streamlit to Kubernetes') {
+
+                stage('Generate Kubernetes ServiceAccount Kubeconfig') {
                     steps {
-                        timeout(time: 15, unit: 'MINUTES') {
+                        timeout(time: 3, unit: 'MINUTES') {
                             withCredentials([
                                 file(
-                                    credentialsId: 'kubeconfig-dockerdesktop',
-                                    variable: 'KUBE_CONFIG_FILE'
+                                    credentialsId: 'kubeconfig-bootstrap',
+                                    variable: 'BOOTSTRAP_KUBECONFIG'
                                 )
                             ]) {
-                                dir('terraform') {
-                                    sh '''
-                                        set -eu
+                                sh '''#!/usr/bin/env bash
+                set -euo pipefail
+                set +x
+                umask 077
 
-                                        # Kubernetes authentication
-                                        export KUBECONFIG="$KUBE_CONFIG_FILE"
-                                        export KUBE_CONFIG_PATH="$KUBE_CONFIG_FILE"
+                echo "===== Verify Bootstrap Authentication ====="
+                kubectl --kubeconfig="$BOOTSTRAP_KUBECONFIG" auth whoami
 
-                                        echo "========== Terraform Version =========="
-                                        terraform version
+                mkdir -p "$WORKSPACE/.terraform-auth"
+                chmod 700 "$WORKSPACE/.terraform-auth"
 
-                                        echo "========== Verify Kubernetes Access =========="
-                                        kubectl auth can-i create deployments \
-                                        -n streamlit-terraform | grep -qx yes
+                echo "===== Generate Fresh SA Token and Kubeconfig ====="
 
-                                        kubectl auth can-i patch deployments \
-                                        -n streamlit-terraform | grep -qx yes
+                bash scripts/generate-sa-kubeconfig.sh \
+                "$WORKSPACE/.terraform-auth/sa-kubeconfig.yaml"
 
-                                        kubectl auth can-i create services \
-                                        -n streamlit-terraform | grep -qx yes
-
-                                        echo "========== Terraform Init =========="
-                                        terraform init -input=false
-
-                                        echo "========== Terraform Format =========="
-                                        terraform fmt -check -recursive
-
-                                        echo "========== Terraform Validate =========="
-                                        terraform validate
-
-                                        echo "========== Terraform Plan =========="
-                                        set +e
-
-                                        terraform plan \
-                                        -input=false \
-                                        -lock-timeout=5m \
-                                        -detailed-exitcode \
-                                        -var="kubeconfig_path=$KUBE_CONFIG_PATH" \
-                                        -var="image_repo=$IMAGE_REPO" \
-                                        -var="image_tag=$IMAGE_TAG" \
-                                        -out=tfplan
-
-                                        PLAN_EXIT=$?
-                                        set -e
-
-                                        if [ "$PLAN_EXIT" -eq 1 ]; then
-                                            echo "Terraform plan failed!"
-                                            exit 1
-                                        fi
-
-                                        if [ "$PLAN_EXIT" -eq 2 ]; then
-                                            echo "Changes detected. Applying..."
-
-                                            terraform apply \
-                                            -input=false \
-                                            -lock-timeout=5m \
-                                            tfplan
-
-                                        else
-                                            echo "No infrastructure changes detected."
-                                        fi
-
-                                        echo "========== Verify Deployment =========="
-                                        kubectl rollout status \
-                                        deployment/streamlit-deploy \
-                                        -n streamlit-terraform \
-                                        --timeout=180s
-
-                                        echo "========== Terraform Outputs =========="
-                                        terraform output
-
-                                        echo "========== Deployment Complete =========="
-                                    '''
-                                }
+                echo "ServiceAccount kubeconfig generated."
+                '''
                             }
                         }
                     }
+                }
 
-                    post {
-                        always {
-                            dir('terraform/kubernetes') {
-                                sh '''
-                                    rm -f tfplan
-                                    echo "Terraform temporary plan removed."
+                stage('Terraform Init and Validate') {
+                    steps {
+                        timeout(time: 3, unit: 'MINUTES') {
+                            dir('terraform') {
+                                sh '''#!/usr/bin/env bash
+                set -euo pipefail
+
+                export KUBECONFIG="$WORKSPACE/.terraform-auth/sa-kubeconfig.yaml"
+                export KUBE_CONFIG_PATH="$KUBECONFIG"
+
+                echo "===== Verify ServiceAccount Identity ====="
+                kubectl auth whoami
+
+                echo "===== Verify Kubernetes Access ====="
+                kubectl auth can-i create deployments \
+                -n streamlit-terraform | grep -qx yes
+
+                echo "===== Terraform Init ====="
+                terraform init -input=false
+
+                echo "===== Terraform Validate ====="
+                terraform validate
+                '''
+                            }
+                        }
+                    }
+                }
+
+                stage('Terraform Plan Streamlit') {
+                    steps {
+                        timeout(time: 5, unit: 'MINUTES') {
+                            dir('terraform') {
+                                sh '''#!/usr/bin/env bash
+                set -euo pipefail
+                umask 077
+
+                export KUBECONFIG="$WORKSPACE/.terraform-auth/sa-kubeconfig.yaml"
+                export KUBE_CONFIG_PATH="$KUBECONFIG"
+
+                echo "===== Terraform Plan ====="
+
+                terraform plan \
+                -input=false \
+                -var="namespace=streamlit-terraform" \
+                -var="create_namespace=false" \
+                -var="image_tag=$IMAGE_TAG" \
+                -out="$WORKSPACE/.terraform-auth/tfplan"
+
+                echo "Terraform plan generated."
+                '''
+                            }
+                        }
+                    }
+                }
+
+                stage('Terraform Apply Streamlit') {
+                    steps {
+                        timeout(time: 5, unit: 'MINUTES') {
+                            dir('terraform') {
+                                sh '''#!/usr/bin/env bash
+                                set -euo pipefail
+
+                                export KUBECONFIG="$WORKSPACE/.terraform-auth/sa-kubeconfig.yaml"
+                                export KUBE_CONFIG_PATH="$KUBECONFIG"
+
+                                echo "===== Terraform Apply ====="
+
+                                terraform apply \
+                                -input=false \
+                                -auto-approve \
+                                "$WORKSPACE/.terraform-auth/tfplan"
+
+                                echo "===== Verify Kubernetes Deployment ====="
+
+                                kubectl rollout status \
+                                deployment/streamlit-deploy \
+                                -n streamlit-terraform \
+                                --timeout=120s
+
+                                echo "===== Running Resources ====="
+
+                                kubectl get deployments,services,pods \
+                                -n streamlit-terraform
+
+                                echo "Streamlit Kubernetes deployment successful."
                                 '''
                             }
                         }

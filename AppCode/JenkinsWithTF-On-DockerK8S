@@ -79,7 +79,7 @@ pipeline {
                         --load \
                         AppCode/.
 
-                    echo "Docker image built successfully"
+                    echo "Docker image built successfully!!!"
                 '''
             }
         }

@@ -121,7 +121,7 @@ pipeline {
                             bash scripts/generate-sa-kubeconfig.sh \
                                 "$WORKSPACE/.terraform-auth/sa-kubeconfig.yaml"
 
-                            echo "ServiceAccount kubeconfig generated."
+                            echo "ServiceAccount kubeconfig generated!!."
                         '''
                     }
                 }

@@ -156,6 +156,47 @@ pipeline {
             }
         }
 
+        stage('Import Existing Kubernetes Resources') {
+            steps {
+                timeout(time: 5, unit: 'MINUTES') {
+                    dir('terraform') {
+                        sh '''#!/usr/bin/env bash
+                            set -euo pipefail
+
+                            export KUBECONFIG="$WORKSPACE/.terraform-auth/sa-kubeconfig.yaml"
+                            export KUBE_CONFIG_PATH="$KUBECONFIG"
+
+                            echo "===== Existing Terraform State ====="
+                            terraform state list
+
+                            echo "===== Import Deployment ====="
+                            if ! terraform state list | grep -Fxq 'kubernetes_deployment_v1.streamlit'; then
+                                terraform import \
+                                -var="namespace=streamlit-terraform" \
+                                -var="create_namespace=false" \
+                                -var="image_tag=$IMAGE_TAG" \
+                                kubernetes_deployment_v1.streamlit \
+                                streamlit-terraform/streamlit-deploy
+                            fi
+
+                            echo "===== Import Service ====="
+                            if ! terraform state list | grep -Fxq 'kubernetes_service_v1.streamlit'; then
+                                terraform import \
+                                -var="namespace=streamlit-terraform" \
+                                -var="create_namespace=false" \
+                                -var="image_tag=$IMAGE_TAG" \
+                                kubernetes_service_v1.streamlit \
+                                streamlit-terraform/streamlit-service
+                            fi
+
+                            echo "===== Terraform State After Import ====="
+                            terraform state list
+                        '''
+                    }
+                }
+            }
+        }
+
         stage('Terraform Plan Streamlit') {
             steps {
                 timeout(time: 5, unit: 'MINUTES') {

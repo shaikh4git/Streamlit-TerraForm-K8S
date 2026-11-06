@@ -357,17 +357,61 @@ terraform state list || true
                             echo "    STREAMLIT DEPLOYMENT SUCCESSFUL"
                             echo "========================================"
 
-                            echo ""
-                            echo "========================================"
-                            echo "    Terraform Destruction begins.."
-                            echo "========================================"
-                            terraform destroy \
-                                -input=false \
-                                -auto-approve \
-                                -var="namespace=streamlit-terraform" \
-                                -var="create_namespace=false" \
-                                -var="image_tag=$IMAGE_TAG"
+                        '''
+                    }
+                }
+            }
+        }
 
+        stage('Approval for Terraform Destroy') {
+            steps {
+                script {
+                        input(
+                    message: 'Are you sure you want to DESTROY the Streamlit Kubernetes Deployment and Service in namespace streamlit-terraform?',
+                    ok: 'Approve Terraform Destroy',
+                    submitterParameter: 'APPROVED_BY'
+                            )
+                }
+            }
+        }
+
+        stage('Terraform Destroy Streamlit') {
+            steps {
+                timeout(time: 10, unit: 'MINUTES') {
+                    dir('terraform') {
+                        sh '''#!/usr/bin/env bash
+                        set -euo pipefail
+
+                        export KUBECONFIG="$WORKSPACE/.terraform-auth/sa-kubeconfig.yaml"
+                        export KUBE_CONFIG_PATH="$KUBECONFIG"
+
+                        echo "===== Verify Kubernetes Identity ====="
+                        kubectl auth whoami
+
+                        echo "===== Terraform Destroy ====="
+
+                        terraform destroy \
+                        -input=false \
+                        -auto-approve \
+                        -var="namespace=streamlit-terraform" \
+                        -var="create_namespace=false" \
+                        -var="image_tag=$IMAGE_TAG"
+
+                        echo "===== Verify Resources Removed ====="
+
+                        if kubectl get deployment streamlit-deploy \
+                        -n streamlit-terraform >/dev/null 2>&1; then
+                            echo "ERROR: Deployment still exists."
+                            exit 1
+                        fi
+
+                        if kubectl get service streamlit-service \
+                        -n streamlit-terraform >/dev/null 2>&1; then
+                            echo "ERROR: Service still exists."
+                            exit 1
+                        fi
+
+                        echo "Terraform Destroy completed successfully."
                         '''
                     }
                 }

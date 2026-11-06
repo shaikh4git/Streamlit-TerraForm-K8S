@@ -831,9 +831,9 @@ elif page == "👨‍💻 About Shaikh S Huda":
             """
         )
 
-    with profile_right:
-        image_path = (
-        Path(__file__).resolve().parent.parent
+with profile_right:
+    image_path = (
+        Path(__file__).resolve().parent
         / "images"
         / "shaikh-profile.jpg"
     )

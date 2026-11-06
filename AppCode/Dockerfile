@@ -14,6 +14,7 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     /opt/ansible/bin/python -m pip install ansible requests docker
 # Copy Streamlit application!!!!
 COPY app.py .
+COPY images/ ./images/
 
 # Create a non-root user and set ownership!!
 RUN useradd --create-home appuser && \

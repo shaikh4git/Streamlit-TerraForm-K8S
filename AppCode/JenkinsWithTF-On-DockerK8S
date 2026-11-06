@@ -17,7 +17,7 @@ pipeline {
             steps { cleanWs() }
         }
 
-        stage('Checkout GitHub') {
+        stage('Checkout GitHub!') {
             steps {
                 script {
                     def gitInfo = checkout scm
@@ -39,7 +39,7 @@ pipeline {
             }
         }
 
-        stage('Gitleaks Secret Scanning') {
+        stage('Gitleaks Secret Scanning!!') {
             steps {
                 script {
                     sh '''

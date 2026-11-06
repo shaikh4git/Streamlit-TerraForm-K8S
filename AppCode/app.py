@@ -801,21 +801,47 @@ Monitoring & Retraining
 # ABOUT
 # ------------------------------------------------------------
 
+
+
 elif page == "👨‍💻 About Shaikh S Huda":
-    st.title("👨‍💻 Shaikh S Huda")
-    st.subheader("Platform Engineering | DevOps | DevSecOps | AI")
 
-    st.markdown(
-        """
-        Welcome to the professional engineering portfolio
-        of **Shaikh S Huda**.
+    # ======================================
+    # HEADER - PROFILE DETAILS AND PHOTO
+    # ======================================
 
-        This platform demonstrates practical knowledge of
-        continuous integration, continuous delivery,
-        container orchestration, infrastructure automation,
-        security scanning and machine learning workflows.
-        """
-    )
+    profile_left, profile_right = st.columns([3, 1], gap="large")
+
+    with profile_left:
+        st.title("👨‍💻 Shaikh S Huda")
+
+        st.subheader(
+            "Platform Engineering | DevOps | DevSecOps | AI"
+        )
+
+        st.markdown(
+            """
+            Welcome to the professional engineering portfolio
+            of **Shaikh S Huda**.
+
+            This platform demonstrates practical knowledge of
+            continuous integration, continuous delivery,
+            container orchestration, infrastructure automation,
+            security scanning and machine learning workflows.
+            """
+        )
+
+    with profile_right:
+        st.image(
+            "images/shaikh-profile.jpg",
+            caption="Shaikh S Huda",
+            width="stretch"
+        )
+
+    st.divider()
+
+    # ======================================
+    # ENGINEERING EXPERTISE
+    # ======================================
 
     left, right = st.columns(2)
 
@@ -852,8 +878,9 @@ elif page == "👨‍💻 About Shaikh S Huda":
         "Deploy reliably. Monitor continuously."
     )
 
-    st.markdown(f"**Designed and developed by {AUTHOR}.**")
-
+    st.markdown(
+        f"**Designed and developed by {AUTHOR}.**"
+    )
 
 # ------------------------------------------------------------
 # REPORTS

@@ -831,18 +831,18 @@ elif page == "👨‍💻 About Shaikh S Huda":
             """
         )
 
-with profile_right:
-    image_path = (
-        Path(__file__).resolve().parent
-        / "images"
-        / "shaikh-profile.jpg"
-    )
+    with profile_right:
+        image_path = (
+            Path(__file__).resolve().parent
+            / "images"
+            / "shaikh-profile.jpg"
+        )
 
-    st.image(
-        str(image_path),
-        caption="Shaikh S Huda",
-        width="stretch"
-    )
+        st.image(
+            str(image_path),
+            caption="Shaikh S Huda",
+            width="stretch"
+        )
 
 
     st.divider()

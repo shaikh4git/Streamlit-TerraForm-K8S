@@ -15,7 +15,6 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 # Copy Streamlit application!!!!
 COPY app.py .
 COPY images/ ./images/
-
 # Create a non-root user and set ownership!!
 RUN useradd --create-home appuser && \
     chown -R appuser:appuser /app

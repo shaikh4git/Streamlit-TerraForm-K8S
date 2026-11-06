@@ -362,7 +362,7 @@ terraform state list || true
             }
         }
 
-        stage('Approval for Terraform Destroy') {
+        stage('Approval for Terraform Destroy!!') {
             steps {
                 script {
                         input(

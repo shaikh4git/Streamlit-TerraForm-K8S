@@ -19,9 +19,12 @@ pipeline {
 
         stage('Checkout GitHub') {
             steps {
-                checkout scm
-
                 script {
+                    def gitInfo = checkout scm
+
+                    env.GIT_COMMIT = gitInfo.GIT_COMMIT
+                    env.GIT_BRANCH = gitInfo.GIT_BRANCH ?: ''
+
                     env.IMAGE_TAG =
                         "${env.BUILD_NUMBER}-${env.GIT_COMMIT.take(7)}"
 

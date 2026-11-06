@@ -5,6 +5,7 @@ pipeline {
     options {
         disableConcurrentBuilds()
         timestamps()
+        skipDefaultCheckout(true)
     }
 
     environment {
@@ -18,23 +19,18 @@ pipeline {
 
         stage('Checkout GitHub') {
             steps {
-                checkout(
-                    changelog: true,
-                    poll: true,
-                    scm: scmGit(
-                        branches: [[name: '*/main']],
-                        userRemoteConfigs: [[
-                            url: 'https://github.com/shaikh4git/Streamlit-TerraForm-K8S.git'
-                        ]]
-                    )
-                )
+                checkout scm
 
                 script {
                     env.IMAGE_TAG =
                         "${env.BUILD_NUMBER}-${env.GIT_COMMIT.take(7)}"
+
                     env.FULL_IMAGE =
                         "${env.IMAGE_REPO}:${env.IMAGE_TAG}"
 
+                    echo "Git Branch: ${env.GIT_BRANCH}"
+                    echo "Git Commit: ${env.GIT_COMMIT}"
+                    echo "Docker Image: ${env.FULL_IMAGE}"
                     echo "Changelog sets: ${currentBuild.changeSets.size()}"
                 }
             }

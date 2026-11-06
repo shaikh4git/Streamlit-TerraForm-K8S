@@ -1,6 +1,7 @@
 
 import json
 import math
+from pathlib import Path
 import random
 from datetime import datetime, timezone
 
@@ -831,11 +832,18 @@ elif page == "👨‍💻 About Shaikh S Huda":
         )
 
     with profile_right:
-        st.image(
-            "images/shaikh-profile.jpg",
-            caption="Shaikh S Huda",
-            width="stretch"
-        )
+        image_path = (
+        Path(__file__).resolve().parent.parent
+        / "images"
+        / "shaikh-profile.jpg"
+    )
+
+    st.image(
+        str(image_path),
+        caption="Shaikh S Huda",
+        width="stretch"
+    )
+
 
     st.divider()
 

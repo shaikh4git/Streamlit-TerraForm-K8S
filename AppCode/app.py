@@ -885,7 +885,8 @@ elif page == "🏢 Companies & Clients":
         },
 
         {
-            "company": "Robomy Sdn Bhd — Kuala Lumpur, Malaysia",
+            "company": "Freelancer — Kuala Lumpur, Malaysia",
+            "Client": "Robomy Sdn Bhd",
             "period": "September 2024 – October 2024",
             "title": "Technical Trainer",
             "details": [
@@ -899,6 +900,7 @@ elif page == "🏢 Companies & Clients":
 
         {
             "company": "Dell EMC — United States",
+            "Client": "PowerPath",
             "period": "November 2022 – May 2024",
             "title": "Co-op / Internship — Pricnipal Software Engineer & Data Science",
             "details": [
@@ -912,6 +914,7 @@ elif page == "🏢 Companies & Clients":
         },
         {
             "company": "Dell EMC — India",
+            "Client": "Dell EMC, India",
             "period": "May 2017 – October 2022",
             "title": "Principal Software Engineer",
             "details": [
@@ -924,6 +927,7 @@ elif page == "🏢 Companies & Clients":
         },
         {
             "company": "Wipro Limited — Finland",
+            "Client": "Stora Enso, Imatra, Finland",
             "period": "April 2014 – May 2017 · 3 yrs 2 mos",
             "title": "Senior Solution Consultant",
             "details": [
@@ -949,6 +953,7 @@ elif page == "🏢 Companies & Clients":
         },
         {
             "company": "Wipro Limited — Reading, United Kingdom",
+            "Client": "Thames Water Utilities, United Kingdom",
             "period": "June 2011 – March 2014 · 2 yrs 10 mos",
             "title": "Infrastructure Specialist",
             "details": [
@@ -975,16 +980,16 @@ elif page == "🏢 Companies & Clients":
         },
         {
             "company": "Wipro Limited — Bengaluru, India",
+            "Client": "Thames Water Utilities, United Kingdom",
             "period": "July 2008 – May 2011 · 2 yrs 11 mos",
             "title": "System Administrator",
             "details": [
-                "Client: Thames Water Utilities, United Kingdom.",
                 "Provided multi-operating-system administration "
                 "and enterprise infrastructure support.",
                 "Automated routine system administration tasks "
                 "using Bash shell scripting.",
                 "Monitored infrastructure health, availability, "
-                "performance, and operational alerts.",
+                "performance, and operational alerts.", 
                 "Managed enterprise backup and restore operations.",
                 "Delivered on-call infrastructure support, "
                 "incident troubleshooting, and issue resolution.",
@@ -1000,12 +1005,15 @@ elif page == "🏢 Companies & Clients":
         },
         {
             "company": "Tutor Vista — Bangalore, India",
+            "Client": "Tutor Vista, India",
              "period": "December 2007 – July 2008",
              "title": "Offshore Faculty",
              "details": [
                  "Tutoring Physics and Mathematics online Globally mostly the students from the USA and Canada ",
              ],
+             "technologies": "Google Chat for TutorVista",
          },
+
     ]
 
     for experience in experiences:

@@ -860,43 +860,6 @@ elif page == "🏢 Companies & Clients":
 
     experiences = [
         {
-            "company": "Dell EMC — India",
-            "period": "Until October 2022",
-            "title": "Infrastructure & Technical Support",
-            "details": [
-                "Enterprise storage and infrastructure support",
-                "Technical troubleshooting and escalations",
-                "Customer experience and technical problem resolution",
-                "Linux and enterprise infrastructure technologies",
-            ],
-            "technologies": "Linux, Enterprise Storage, PowerPath",
-        },
-        {
-            "company": "Dell EMC — United States",
-            "period": "November 2022 – May 2024",
-            "title": "Co-op / Internship — Infrastructure & Data Science",
-            "details": [
-                "Customer experience and PowerPath escalations",
-                "Python-based data processing",
-                "Data engineering and ETL workflows",
-                "Azure Databricks and analytics",
-                "Machine learning and AI-related initiatives",
-            ],
-            "technologies": "Python, Azure, Databricks, ETL, ML",
-        },
-        {
-            "company": "Robomy Sdn Bhd — Kuala Lumpur, Malaysia",
-            "period": "September 2024 – October 2024",
-            "title": "Technical Trainer",
-            "details": [
-                "Delivered technical training workshops",
-                "Python and Django development",
-                "DevOps fundamentals and Linux",
-                "Machine learning and KNIME",
-            ],
-            "technologies": "Python, Django, Linux, DevOps, KNIME",
-        },
-        {
             "company": "Freelancer",
             "period": "October 2024 – Present",
             "title": "DevOps, DevSecOps & Cloud Engineering",
@@ -920,6 +883,125 @@ elif page == "🏢 Companies & Clients":
                 "Transformers, ChromaDB, FastAPI"
             ),
         },
+
+        {
+            "company": "Robomy Sdn Bhd — Kuala Lumpur, Malaysia",
+            "period": "September 2024 – October 2024",
+            "title": "Technical Trainer",
+            "details": [
+                "Delivered technical training workshops",
+                "Python and Django development",
+                "DevOps fundamentals and Linux",
+                "Machine learning and KNIME",
+            ],
+            "technologies": "Python, Django, Linux, DevOps, KNIME",
+        },
+
+        {
+            "company": "Dell EMC — United States",
+            "period": "November 2022 – May 2024",
+            "title": "Co-op / Internship — Pricnipal Software Engineer & Data Science",
+            "details": [
+                "Customer experience and PowerPath escalations",
+                "Python-based data processing",
+                "Data engineering and ETL workflows",
+                "Azure Databricks and analytics",
+                "Machine learning and AI-related initiatives",
+            ],
+            "technologies": "Python, Azure, Databricks, ETL, ML",
+        },
+        {
+            "company": "Dell EMC — India",
+            "period": "May 2017 – October 2022",
+            "title": "Principal Software Engineer",
+            "details": [
+                "Enterprise storage and infrastructure support",
+                "Technical troubleshooting and escalations",
+                "Customer experience and technical problem resolution",
+                "Linux and enterprise infrastructure technologies",
+            ],
+            "technologies": "Linux, Enterprise Storage, PowerPath",
+        },
+        {
+            "company": "Wipro Limited — Finland",
+            "period": "April 2014 – May 2017 · 3 yrs 2 mos",
+            "title": "Senior Solution Consultant",
+            "details": """
+            - Led a critical data center migration from Tieto to Wipro,
+            provisioning 300+ Linux servers across Finland with
+            zero major service disruption.
+            - Designed and executed enterprise data migration strategies.
+            - Built a 6-node VMware ESXi private cloud infrastructure,
+            deploying SUSE Linux virtual machines.
+            - Served as onsite SUSE Linux and Red Hat Enterprise Linux
+            (RHEL) Subject Matter Expert.
+            - Led offshore technical teams and managed end-to-end
+            Linux infrastructure support.
+            - Architected Linux and VMware ESXi clusters.
+            - Performed Physical-to-Virtual (P2V) migrations.
+            - Optimized Linux kernels for infrastructure performance.
+            - Led root cause analysis, major incident management,
+            troubleshooting, and service restoration.
+            """,
+            "technologies": (
+                "SUSE Linux, RHEL, VMware ESXi, vCenter, "
+                "Linux Clustering, Data Center Migration, "
+                "P2V Migration, Shell Scripting, "
+                "Kernel Tuning, Incident Management"
+            ),
+        },
+        {
+            "company": "Wipro Limited — Reading, United Kingdom",
+            "period": "June 2011 – March 2014 · 2 yrs 10 mos",
+            "title": "Infrastructure Specialist",
+            "details": """
+            - Designed and administered enterprise Linux infrastructure
+            supporting 500+ Linux servers.
+            - Performed Linux kernel fine-tuning for SAP applications
+            and IBM DB2 database workloads.
+            - Configured VMware vCenter and deployed virtual machines
+            across VMware ESX clusters.
+            - Managed IBM AIX virtualization environments.
+            - Prepared and configured infrastructure platforms
+            for Oracle and IBM DB2 database deployments.
+            - Delivered end-to-end Linux architecture, administration,
+            troubleshooting, and performance optimization.
+            - Conducted customer meetings, technical discussions,
+            requirements gathering, and infrastructure planning.
+            """,
+            "technologies": (
+                "Linux, SUSE Linux, RHEL, IBM AIX, "
+                "VMware ESX, VMware vCenter, SAP, "
+                "IBM DB2, Oracle, Kernel Tuning, "
+                "Virtualization, Infrastructure Architecture"
+            ),
+        },
+        {
+            "company": "Wipro Limited — Bengaluru, India",
+            "period": "July 2008 – May 2011 · 2 yrs 11 mos",
+            "title": "System Administrator",
+            "details": """
+            - Client: Thames Water Utilities, United Kingdom.
+            - Provided multi-operating-system administration
+            and enterprise infrastructure support.
+            - Automated routine system administration tasks
+            using Bash shell scripting.
+            - Monitored infrastructure health, availability,
+            performance, and operational alerts.
+            - Managed enterprise backup and restore operations.
+            - Delivered on-call infrastructure support,
+            incident troubleshooting, and issue resolution.
+            - Supported business-critical enterprise systems
+            to maintain operational reliability.
+            """,
+            "technologies": (
+                "Linux, Unix, Bash Shell Scripting, "
+                "System Administration, Infrastructure Monitoring, "
+                "Backup and Recovery, Incident Management, "
+                "Enterprise Infrastructure Support"
+            ),
+        },
+
     ]
 
     for experience in experiences:

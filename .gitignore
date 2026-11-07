@@ -12,3 +12,13 @@ crash.*.log
 *.tfvars.json
 .DS_Store
 /terraform/kubeconfig-bootstrap.yamlterraform/kubeconfig-bootstrap.yaml
+# Python virtual environments
+.venv/
+venv/
+
+# Python bytecode
+__pycache__/
+*.pyc
+
+# Python cache
+.pytest_cache/

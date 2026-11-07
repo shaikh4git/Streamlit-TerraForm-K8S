@@ -258,6 +258,8 @@ with st.sidebar:
             "🚦 Deployment Strategies",
             "📈 Monitoring",
             "🤖 AI & MLOps Lab",
+            "🎓 Graduation Photos",
+            "🏢 Companies & Clients",
             "👨‍💻 About Shaikh S Huda",
             "📥 Reports",
         ],
@@ -334,7 +336,7 @@ if page == "🏠 Home":
         "Python | Streamlit | Jenkins | Docker | Kubernetes | "
         "Terraform | Ansible | GitHub Actions | Argo CD | "
         "Argo Rollouts | Prometheus | Grafana | SonarQube | "
-        "Gitleaks | Trivy | Databricks"
+        "Gitleaks | Trivy | Azure Databricks | AI/ML | AWS | Azure | Linux | Git"
     )
 
     st.info(
@@ -795,6 +797,142 @@ Monitoring & Retraining
     st.info(
         "The activation score is a weighted demonstration. "
         "It is not a trained predictive model."
+    )
+
+
+# ------------------------------------------------------------
+# GRADUATION PHOTOS
+# ------------------------------------------------------------
+
+elif page == "🎓 Graduation Photos":
+    st.title("🎓 MS Data Science Graduation Day")
+    st.subheader("Saint Peter's University")
+    st.caption("17 May 2024 | New Jersey, USA")
+
+    st.markdown("""
+    ### A Memorable Academic Milestone
+
+    Completing my Master's degree in Data Science at Saint Peter's
+    University was an important milestone in my academic and
+    professional journey.
+
+    My studies strengthened my knowledge of Python programming,
+    data science and analytics, machine learning, data engineering,
+    cloud technologies, and applied AI.
+    """)
+
+    # Store graduation-2024.png and optional additional graduation
+    # images in AppCode/images/. The gallery auto-discovers them.
+    images_dir = Path(__file__).resolve().parent / "images"
+    photo_files = sorted(
+        file for file in images_dir.glob("graduation-*")
+        if file.is_file() and file.suffix.lower() in {".png", ".jpg", ".jpeg", ".webp"}
+    )
+
+    if photo_files:
+        st.subheader("Graduation Photo Gallery")
+        for start in range(0, len(photo_files), 2):
+            columns = st.columns(2)
+            for column, photo in zip(columns, photo_files[start:start + 2]):
+                with column:
+                    st.image(
+                        str(photo),
+                        caption=f"Saint Peter's University — {photo.stem.replace('-', ' ').title()}",
+                        use_container_width=True,
+                    )
+    else:
+        st.info(
+            "Add graduation-2024.png to AppCode/images/ "
+            "to display your graduation photos."
+        )
+
+
+# ------------------------------------------------------------
+# COMPANIES AND CLIENT ENGAGEMENTS
+# ------------------------------------------------------------
+
+elif page == "🏢 Companies & Clients":
+    st.title("🏢 Companies & Client Engagements")
+    st.write(
+        "Professional experience in infrastructure, DevOps, DevSecOps, "
+        "cloud engineering, data science, and technical training."
+    )
+
+    experiences = [
+        {
+            "company": "Dell EMC — India",
+            "period": "Until October 2022",
+            "title": "Infrastructure & Technical Support",
+            "details": [
+                "Enterprise storage and infrastructure support",
+                "Technical troubleshooting and escalations",
+                "Customer experience and technical problem resolution",
+                "Linux and enterprise infrastructure technologies",
+            ],
+            "technologies": "Linux, Enterprise Storage, PowerPath",
+        },
+        {
+            "company": "Dell EMC — United States",
+            "period": "November 2022 – May 2024",
+            "title": "Co-op / Internship — Infrastructure & Data Science",
+            "details": [
+                "Customer experience and PowerPath escalations",
+                "Python-based data processing",
+                "Data engineering and ETL workflows",
+                "Azure Databricks and analytics",
+                "Machine learning and AI-related initiatives",
+            ],
+            "technologies": "Python, Azure, Databricks, ETL, ML",
+        },
+        {
+            "company": "Robomy Sdn Bhd — Kuala Lumpur, Malaysia",
+            "period": "September 2024 – October 2024",
+            "title": "Technical Trainer",
+            "details": [
+                "Delivered technical training workshops",
+                "Python and Django development",
+                "DevOps fundamentals and Linux",
+                "Machine learning and KNIME",
+            ],
+            "technologies": "Python, Django, Linux, DevOps, KNIME",
+        },
+        {
+            "company": "Freelancer",
+            "period": "October 2024 – Present",
+            "title": "DevOps, DevSecOps & Cloud Engineering",
+            "details": [
+                "Jenkins CI/CD pipeline implementations",
+                "Docker and Kubernetes deployments",
+                "Terraform Infrastructure as Code",
+                "Argo CD GitOps and Argo Rollouts",
+                "DevSecOps security integration",
+                "Prometheus and Grafana monitoring",
+                "Machine learning model building",
+                "Hands-on machine learning and data analytics projects",
+                "Generative AI and RAG chatbot prototypes using Python, "
+                "LangChain, Llama, Hugging Face Transformers, ChromaDB, and FastAPI",
+                "Automated CI/CD for ML model packaging and deployment "
+                "using Jenkins, Docker, Kubernetes, and GitHub Actions",
+            ],
+            "technologies": (
+                "AWS, Azure, Terraform, Jenkins, Docker, Kubernetes, "
+                "Argo CD, Python, LangChain, Llama, Hugging Face "
+                "Transformers, ChromaDB, FastAPI"
+            ),
+        },
+    ]
+
+    for experience in experiences:
+        with st.container(border=True):
+            st.subheader(experience["company"])
+            st.write(f"**Period:** {experience['period']}")
+            st.write(f"**Title:** {experience['title']}")
+            st.markdown("\n".join(f"- {detail}" for detail in experience["details"]))
+            st.caption(f"Technologies: {experience['technologies']}")
+
+    st.caption(
+        "Add named client engagements only when you have permission "
+        "to disclose them publicly."
     )
 
 

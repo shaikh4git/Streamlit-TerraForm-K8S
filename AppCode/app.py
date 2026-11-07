@@ -998,8 +998,14 @@ elif page == "🏢 Companies & Clients":
                 "Enterprise Infrastructure Support"
             ),
         },
- 
-
+        {
+            "company": "Tutor Vista — Bangalore, India",
+             "period": "December 2007 – July 2008",
+             "title": "Offshore Faculty",
+             "details": [
+                 "Tutoring Physics and Mathematics online Globally mostly the students from the USA and Canada ",
+             ],
+         },
     ]
 
     for experience in experiences:

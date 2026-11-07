@@ -926,23 +926,20 @@ elif page == "🏢 Companies & Clients":
             "company": "Wipro Limited — Finland",
             "period": "April 2014 – May 2017 · 3 yrs 2 mos",
             "title": "Senior Solution Consultant",
-            "details": """
-            - Led a critical data center migration from Tieto to Wipro,
-            provisioning 300+ Linux servers across Finland with
-            zero major service disruption.
-            - Designed and executed enterprise data migration strategies.
-            - Built a 6-node VMware ESXi private cloud infrastructure,
-            deploying SUSE Linux virtual machines.
-            - Served as onsite SUSE Linux and Red Hat Enterprise Linux
-            (RHEL) Subject Matter Expert.
-            - Led offshore technical teams and managed end-to-end
-            Linux infrastructure support.
-            - Architected Linux and VMware ESXi clusters.
-            - Performed Physical-to-Virtual (P2V) migrations.
-            - Optimized Linux kernels for infrastructure performance.
-            - Led root cause analysis, major incident management,
-            troubleshooting, and service restoration.
-            """,
+            "details": [
+                "Led a critical data center migration from Tieto to Wipro, "
+                "provisioning 300+ Linux servers across Finland with zero major service disruption.",
+                "Designed and executed enterprise data migration strategies.",
+                "Built a 6-node VMware ESXi private cloud infrastructure, "
+                "deploying SUSE Linux virtual machines.",
+                "Served as onsite SUSE Linux and Red Hat Enterprise Linux (RHEL) Subject Matter Expert.",
+                "Led offshore technical teams and managed end-to-end Linux infrastructure support.",
+                "Architected Linux and VMware ESXi clusters.",
+                "Performed Physical-to-Virtual (P2V) migrations.",
+                "Optimized Linux kernels for infrastructure performance.",
+                "Led root cause analysis, major incident management, "
+                "troubleshooting, and service restoration.",
+            ],
             "technologies": (
                 "SUSE Linux, RHEL, VMware ESXi, vCenter, "
                 "Linux Clustering, Data Center Migration, "
@@ -954,21 +951,21 @@ elif page == "🏢 Companies & Clients":
             "company": "Wipro Limited — Reading, United Kingdom",
             "period": "June 2011 – March 2014 · 2 yrs 10 mos",
             "title": "Infrastructure Specialist",
-            "details": """
-            - Designed and administered enterprise Linux infrastructure
-            supporting 500+ Linux servers.
-            - Performed Linux kernel fine-tuning for SAP applications
-            and IBM DB2 database workloads.
-            - Configured VMware vCenter and deployed virtual machines
-            across VMware ESX clusters.
-            - Managed IBM AIX virtualization environments.
-            - Prepared and configured infrastructure platforms
-            for Oracle and IBM DB2 database deployments.
-            - Delivered end-to-end Linux architecture, administration,
-            troubleshooting, and performance optimization.
-            - Conducted customer meetings, technical discussions,
-            requirements gathering, and infrastructure planning.
-            """,
+            "details": [
+                "Designed and administered enterprise Linux infrastructure "
+                "supporting 500+ Linux servers.",
+                "Performed Linux kernel fine-tuning for SAP applications "
+                "and IBM DB2 database workloads.",
+                "Configured VMware vCenter and deployed virtual machines "
+                "across VMware ESX clusters.",
+                "Managed IBM AIX virtualization environments.",
+                "Prepared and configured infrastructure platforms "
+                "for Oracle and IBM DB2 database deployments.",
+                "Delivered end-to-end Linux architecture, administration, "
+                "troubleshooting, and performance optimization.",
+                "Conducted customer meetings, technical discussions, "
+                "requirements gathering, and infrastructure planning.",
+            ],
             "technologies": (
                 "Linux, SUSE Linux, RHEL, IBM AIX, "
                 "VMware ESX, VMware vCenter, SAP, "
@@ -980,20 +977,20 @@ elif page == "🏢 Companies & Clients":
             "company": "Wipro Limited — Bengaluru, India",
             "period": "July 2008 – May 2011 · 2 yrs 11 mos",
             "title": "System Administrator",
-            "details": """
-            - Client: Thames Water Utilities, United Kingdom.
-            - Provided multi-operating-system administration
-            and enterprise infrastructure support.
-            - Automated routine system administration tasks
-            using Bash shell scripting.
-            - Monitored infrastructure health, availability,
-            performance, and operational alerts.
-            - Managed enterprise backup and restore operations.
-            - Delivered on-call infrastructure support,
-            incident troubleshooting, and issue resolution.
-            - Supported business-critical enterprise systems
-            to maintain operational reliability.
-            """,
+            "details": [
+                "Client: Thames Water Utilities, United Kingdom.",
+                "Provided multi-operating-system administration "
+                "and enterprise infrastructure support.",
+                "Automated routine system administration tasks "
+                "using Bash shell scripting.",
+                "Monitored infrastructure health, availability, "
+                "performance, and operational alerts.",
+                "Managed enterprise backup and restore operations.",
+                "Delivered on-call infrastructure support, "
+                "incident troubleshooting, and issue resolution.",
+                "Supported business-critical enterprise systems "
+                "to maintain operational reliability.",
+            ],
             "technologies": (
                 "Linux, Unix, Bash Shell Scripting, "
                 "System Administration, Infrastructure Monitoring, "
@@ -1001,6 +998,7 @@ elif page == "🏢 Companies & Clients":
                 "Enterprise Infrastructure Support"
             ),
         },
+ 
 
     ]
 

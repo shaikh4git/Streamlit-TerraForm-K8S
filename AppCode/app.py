@@ -247,54 +247,26 @@ with st.sidebar:
     st.caption("Engineering Command Center")
 
     st.divider()
-# Sidebar navigation font styling
-st.markdown(
-    """
-    <style>
-    [data-testid="stSidebar"] .stButton > button {
-        font-size: 19px !important;
-        font-weight: 600 !important;
-        padding: 12px 14px !important;
-        text-align: left !important;
-        justify-content: flex-start !important;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
-pages = [
-    "🏠 Home",
-    "📊 DevOps Dashboard",
-    "🔄 CI/CD Pipeline",
-    "☸️ Kubernetes Lab",
-    "🚦 Deployment Strategies",
-    "📈 Monitoring",
-    "🤖 AI & MLOps Lab",
-    "🎓 Graduation Photos",
-    "🏢 Companies & Clients",
-    "👨‍💻 About Shaikh S Huda",
-    "📥 Reports",
-]
 
-if "selected_page" not in st.session_state:
-    st.session_state.selected_page = "🏠 Home"
+    page = st.radio(
+        "Navigation",
+        [
+            "🏠 Home",
+            "📊 DevOps Dashboard",
+            "🔄 CI/CD Pipeline",
+            "☸️ Kubernetes Lab",
+            "🚦 Deployment Strategies",
+            "📈 Monitoring",
+            "🤖 AI & MLOps Lab",
+            "🎓 Graduation Photos",
+            "🏢 Companies & Clients",
+            "👨‍💻 About Shaikh S Huda",
+            "📥 Reports",
+        ],
+    )
 
-for item in pages:
-    if st.button(
-        item,
-        key=f"nav_{item}",
-        use_container_width=True,
-        type=(
-            "primary"
-            if st.session_state.selected_page == item
-            else "secondary"
-        ),
-    ):
-        st.session_state.selected_page = item
-        st.rerun()
-
-    page = st.session_state.selected_page
     st.divider()
+
     st.success("● Demo Platform Online")
     st.caption(f"Version: {VERSION}")
     st.caption(f"Maintained by {AUTHOR}")

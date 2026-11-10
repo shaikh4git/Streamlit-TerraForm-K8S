@@ -32,7 +32,7 @@ variable "image_tag" {
 variable "replicas" {
   description = "Number of Streamlit replicas"
   type        = number
-  default     = 10
+  default     = 5
 
   validation {
     condition     = var.replicas >= 1 && floor(var.replicas) == var.replicas

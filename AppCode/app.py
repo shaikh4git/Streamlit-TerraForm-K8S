@@ -1050,7 +1050,7 @@ elif page == "📁 Projects":
         """
         <div class="hero">
             <span class="tag">AI • DEVSECOPS • GITOPS • KUBERNETES</span>
-            <h1>Enterprise RBAC Chatbot 🤖</h1>
+            <h1>Project 1: Enterprise RBAC Chatbot 🤖</h1>
             <p>
                 Secure AI-powered enterprise knowledge assistant
                 with department-specific document access and

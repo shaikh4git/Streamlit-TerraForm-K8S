@@ -1153,7 +1153,11 @@ elif page == "📁 Projects":
         "End-to-end architecture covering authentication, "
         "AI-based document retrieval, security and deployment."
     )
-
+    st.image(
+        "images/rbac-chatbot-architecture.png",
+        caption="Enterprise RBAC Chatbot — Secure, Role-Based AI Architecture",
+        use_container_width=True,
+    )
     st.code(
         """
                     EMPLOYEE

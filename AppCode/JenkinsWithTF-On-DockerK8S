@@ -95,7 +95,7 @@ pipeline {
             }
         }
 
-        stage('Generate Kubernetes ServiceAccount Kubeconfig!') {
+     /*   stage('Generate Kubernetes ServiceAccount Kubeconfig!') {
             steps {
                 timeout(time: 3, unit: 'MINUTES') {
                     withCredentials([
@@ -415,6 +415,6 @@ terraform state list || true
                     }
                 }
             }
-        }
+        }*/
     }
 }

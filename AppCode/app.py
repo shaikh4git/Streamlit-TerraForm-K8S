@@ -849,18 +849,18 @@ elif page == "🎓 Graduation Photos":
     # Store graduation-2024.png and optional additional graduation
     # images in AppCode/images/. The gallery auto-discovers them.
 
-photo_files = list_images("graduation")
-if photo_files:
-    st.subheader("Graduation Photo Gallery")
-    for start in range(0, len(photo_files), 2):
-        columns = st.columns(2)
-        for column, photo in zip(columns, photo_files[start:start + 2]):
-            with column:
-                st.image(
-                    str(photo),
-                    caption=f"Saint Peter's University — {photo.stem.replace('-', ' ').title()}",
-                    use_container_width=True,
-                )
+    photo_files = list_images("graduation")
+    if photo_files:
+        st.subheader("Graduation Photo Gallery")
+        for start in range(0, len(photo_files), 2):
+            columns = st.columns(2)
+            for column, photo in zip(columns, photo_files[start:start + 2]):
+                with column:
+                    st.image(
+                        str(photo),
+                        caption=f"Saint Peter's University — {photo.stem.replace('-', ' ').title()}",
+                        use_container_width=True,
+                    )
 
 # ------------------------------------------------------------
 # COMPANIES AND CLIENT ENGAGEMENTS

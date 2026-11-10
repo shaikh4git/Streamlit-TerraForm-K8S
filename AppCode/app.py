@@ -258,7 +258,7 @@ with st.sidebar:
             "🚦 Deployment Strategies",
             "📈 Monitoring",
             "🤖 AI & MLOps Lab",
-            "📊 Projects",
+            "📁 Projects",
             "🎓 Graduation Photos",
             "🏢 Companies & Clients",
             "👨‍💻 About Shaikh S Huda",

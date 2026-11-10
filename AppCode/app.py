@@ -1031,6 +1031,528 @@ elif page == "🏢 Companies & Clients":
 
 
 # ------------------------------------------------------------
+# PROJECTS
+# ------------------------------------------------------------
+
+elif page == "📁 Projects":
+
+    st.title("📁 AI/MLOPS/Data Engineering/DevOps Projects")
+    st.caption(
+        "Enterprise solutions designed and developed by Shaikh S Huda"
+    )
+
+    # ======================================
+    # PROJECT 1: ENTERPRISE RBAC CHATBOT
+    # ======================================
+
+    st.markdown(
+        """
+        <div class="hero">
+            <span class="tag">AI • DEVSECOPS • GITOPS • KUBERNETES</span>
+            <h1>Enterprise RBAC Chatbot 🤖</h1>
+            <p>
+                Secure AI-powered enterprise knowledge assistant
+                with department-specific document access and
+                Role-Based Access Control.
+            </p>
+            <p>
+                Designed to reduce internal communication delays,
+                eliminate departmental information barriers and
+                provide secure access to company knowledge.
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    # ======================================
+    # PROJECT OBJECTIVE
+    # ======================================
+
+    st.subheader("🎯 Project Objective")
+
+    st.write(
+        """
+        Enterprise organizations maintain sensitive information
+        across multiple departments, including Finance, HR,
+        Marketing and Executive Management.
+
+        This project implements an AI-powered internal chatbot
+        that allows employees to retrieve relevant company
+        information while enforcing department-specific access
+        restrictions.
+
+        The chatbot uses authentication and authorization
+        controls to ensure that users can only retrieve
+        information permitted by their assigned roles.
+        """
+    )
+
+    # ======================================
+    # PROJECT HIGHLIGHTS
+    # ======================================
+
+    st.subheader("⚙️ Key Capabilities")
+
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        card(
+            "🔐 Secure Authentication",
+            "User authentication using bcrypt password hashes "
+            "and centrally managed Kubernetes Secrets."
+        )
+
+    with col2:
+        card(
+            "🛡️ Role-Based Access Control",
+            "Department-specific document retrieval based on "
+            "authenticated user identity, department and roles."
+        )
+
+    with col3:
+        card(
+            "🤖 AI-Powered Knowledge Assistant",
+            "Natural language question answering using "
+            "Groq LLM integration and LangChain."
+        )
+
+    col4, col5, col6 = st.columns(3)
+
+    with col4:
+        card(
+            "📂 Department Isolation",
+            "Controlled access to Finance, HR, Marketing "
+            "and Executive information."
+        )
+
+    with col5:
+        card(
+            "🔄 Automated CI/CD",
+            "GitHub Actions for testing, Docker image building, "
+            "image publishing and GitOps repository updates."
+        )
+
+    with col6:
+        card(
+            "☸️ Kubernetes GitOps",
+            "Docker Desktop Kubernetes deployment using "
+            "Argo CD and Argo Rollouts."
+        )
+
+    st.divider()
+
+    # ======================================
+    # ARCHITECTURE
+    # ======================================
+
+    st.subheader("🏗️ Solution Architecture")
+
+    st.write(
+        "End-to-end architecture covering authentication, "
+        "AI-based document retrieval, security and deployment."
+    )
+
+    st.code(
+        """
+                    EMPLOYEE
+                       |
+                       v
+                STREAMLIT CHATBOT
+                       |
+                       v
+                USER AUTHENTICATION
+                       |
+                  bcrypt Verify
+                       |
+                       v
+               AUTHENTICATED IDENTITY
+                       |
+             Department + Assigned Roles
+                       |
+                       v
+                RBAC AUTHORIZATION
+                       |
+              Access Control Enforcement
+                       |
+                       v
+              DEPARTMENT DOCUMENTS
+                       |
+          +------------+------------+
+          |            |            |
+          v            v            v
+       FINANCE         HR        MARKETING
+          |            |            |
+          +------------+------------+
+                       |
+                       v
+                AUTHORIZED CONTEXT
+                       |
+                       v
+                LANGCHAIN / GROQ
+                       |
+                       v
+                 AI RESPONSE
+                       |
+                       v
+                  EMPLOYEE
+
+
+        =========================================
+                   CI/CD AND GITOPS
+        =========================================
+
+        Application GitHub Repository
+                       |
+                       v
+                GITHUB ACTIONS
+                       |
+                +------+------+
+                |             |
+                v             v
+             RBAC TESTS    DOCKER BUILD
+                              |
+                              v
+                         DOCKER HUB
+                              |
+                              v
+                       IMAGE TAG UPDATE
+                              |
+                              v
+                      GITOPS REPOSITORY
+                              |
+                              v
+                           ARGO CD
+                              |
+                              v
+                       ARGO ROLLOUTS
+                              |
+                              v
+                    DOCKER DESKTOP K8S
+        """,
+        language="text",
+    )
+
+    st.info(
+        "Security principle: Authentication establishes who the "
+        "user is; authorization determines which documents the "
+        "user is allowed to retrieve."
+    )
+
+    st.divider()
+
+    # ======================================
+    # AUTHENTICATION AND RBAC
+    # ======================================
+
+    st.subheader("🔐 Authentication & Authorization")
+
+    st.markdown(
+        """
+        **Authentication implementation**
+
+        - User credentials maintained in `Users/users.json`.
+        - Passwords stored as bcrypt hashes.
+        - User configuration injected through the
+          `CHATBOT_USERS_JSON` environment variable.
+        - Kubernetes Secret: `chatbot-secrets`.
+        - API credentials managed through Kubernetes Secrets.
+
+        **Authorization implementation**
+
+        - User identity is established after successful login.
+        - Department and roles are returned by the authentication
+          module.
+        - Document retrieval must enforce the user's permitted
+          department and role.
+        - Unauthorized document retrieval is denied.
+        """
+    )
+
+    st.code(
+        """
+        Kubernetes Secret: chatbot-secrets
+
+        CHATBOT_USERS_JSON
+        GROQ_API_KEY
+        LANGCHAIN_API_KEY
+        """,
+        language="text",
+    )
+
+    st.divider()
+
+    # ======================================
+    # RBAC TEST SCENARIOS
+    # ======================================
+
+    st.subheader("🧪 RBAC Validation Scenarios")
+
+    rbac_tests = pd.DataFrame(
+        [
+            [
+                "Finance",
+                "What is the Finance budget policy?",
+                "Finance information retrieved",
+                "Authorized"
+            ],
+            [
+                "Marketing",
+                "What is the Finance budget policy?",
+                "No Finance document retrieved",
+                "Restricted"
+            ],
+            [
+                "HR",
+                "What is the payroll policy?",
+                "HR information retrieved",
+                "Authorized"
+            ],
+            [
+                "Marketing",
+                "What is the payroll policy?",
+                "No HR document retrieved",
+                "Restricted"
+            ],
+            [
+                "C-level",
+                "What is the Finance budget policy?",
+                "Finance information retrieved",
+                "Authorized"
+            ],
+        ],
+        columns=[
+            "Logged-in User",
+            "Question",
+            "Expected Result",
+            "Access"
+        ]
+    )
+
+    st.dataframe(
+        rbac_tests,
+        use_container_width=True,
+        hide_index=True
+    )
+
+    st.caption(
+        "These are the defined RBAC validation scenarios, "
+        "not live test execution results."
+    )
+
+    st.divider()
+
+    # ======================================
+    # CI/CD PIPELINE
+    # ======================================
+
+    st.subheader("🔄 GitHub Actions CI/CD Pipeline")
+
+    ci_stages = [
+        "GitHub Checkout",
+        "Python Environment Setup",
+        "Dependency Installation",
+        "RBAC Unit Tests",
+        "Docker Build",
+        "Docker Hub Authentication",
+        "Docker Image Push",
+        "GitOps Repository Checkout",
+        "Kustomize Image Tag Update",
+        "GitOps Commit and Push",
+    ]
+
+    for start in range(0, len(ci_stages), 2):
+
+        cols = st.columns(2)
+
+        for col, stage in zip(
+            cols,
+            ci_stages[start:start + 2]
+        ):
+            with col:
+                st.markdown(
+                    f"""
+                    <div class="pipeline">
+                        ⚙️ {stage}
+                    </div>
+                    """,
+                    unsafe_allow_html=True,
+                )
+
+    st.write("")
+
+    st.markdown(
+        """
+        **Docker image versioning**
+
+        Application images are tagged using the first seven
+        characters of the Git commit hash.
+
+        Example:
+        """
+    )
+
+    st.code(
+        """
+        enterprise-rbac-chatbot:7a9f4c2
+        """,
+        language="text",
+    )
+
+    st.write(
+        """
+        The generated image tag is propagated through the
+        GitHub Actions workflow and written into the GitOps
+        repository's Kustomize configuration.
+        """
+    )
+
+    st.divider()
+
+    # ======================================
+    # GITOPS AND KUBERNETES
+    # ======================================
+
+    st.subheader("☸️ Kubernetes Deployment & GitOps")
+
+    deployment_components = pd.DataFrame(
+        [
+            [
+                "Docker",
+                "Container image packaging"
+            ],
+            [
+                "Docker Hub",
+                "Container image registry"
+            ],
+            [
+                "Docker Desktop Kubernetes",
+                "Local Kubernetes environment"
+            ],
+            [
+                "Kubernetes Secrets",
+                "Application credentials and user configuration"
+            ],
+            [
+                "Argo CD",
+                "GitOps-based continuous delivery"
+            ],
+            [
+                "Argo Rollouts",
+                "Progressive application rollout management"
+            ],
+            [
+                "Kustomize",
+                "Kubernetes manifest image version management"
+            ],
+        ],
+        columns=["Technology", "Implementation"]
+    )
+
+    st.dataframe(
+        deployment_components,
+        use_container_width=True,
+        hide_index=True
+    )
+
+    st.markdown(
+        """
+        **Deployment workflow**
+
+        1. GitHub Actions builds and pushes a versioned Docker image.
+        2. The workflow updates `newTag` in the GitOps repository.
+        3. Argo CD detects the GitOps repository change.
+        4. Argo CD synchronizes the updated Kubernetes manifests.
+        5. Argo Rollouts manages the configured progressive
+           deployment strategy.
+        """
+    )
+
+    st.divider()
+
+    # ======================================
+    # TECHNOLOGY STACK
+    # ======================================
+
+    st.subheader("🧰 Technology Stack")
+
+    tech_left, tech_right = st.columns(2)
+
+    with tech_left:
+
+        st.markdown(
+            """
+            **Application & AI**
+
+            - Python
+            - Streamlit
+            - LangChain
+            - Groq LLM
+            - bcrypt
+            - JSON-based user configuration
+
+            **Security**
+
+            - Role-Based Access Control
+            - Password hashing
+            - Kubernetes Secrets
+            - Department-level document authorization
+            """
+        )
+
+    with tech_right:
+
+        st.markdown(
+            """
+            **CI/CD & Containerization**
+
+            - GitHub Actions
+            - Docker
+            - Docker Hub
+            - Git
+
+            **Cloud Native & GitOps**
+
+            - Kubernetes
+            - Docker Desktop
+            - Argo CD
+            - Argo Rollouts
+            - Kustomize
+            """
+        )
+
+    st.divider()
+
+    # ======================================
+    # PROJECT VALUE
+    # ======================================
+
+    st.subheader("💡 Engineering Value")
+
+    st.write(
+        """
+        This project demonstrates the integration of AI
+        application development with enterprise security
+        requirements and modern cloud-native delivery practices.
+
+        It brings together application authentication,
+        authorization, containerization, automated testing,
+        CI/CD, GitOps and progressive Kubernetes deployments
+        within a single engineering solution.
+        """
+    )
+
+    st.success(
+        "Designed and developed by Shaikh S Huda — "
+        "Platform Engineering | DevOps | DevSecOps | AI"
+    )
+
+    st.caption(
+        "Enterprise RBAC Chatbot | AI Engineering | "
+        "GitHub Actions | Kubernetes | GitOps"
+    )
+
+# ------------------------------------------------------------
 # ABOUT
 # ------------------------------------------------------------
 

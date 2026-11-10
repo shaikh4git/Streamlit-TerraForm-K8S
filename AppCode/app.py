@@ -4,10 +4,8 @@ import math
 from pathlib import Path
 import random
 from datetime import datetime, timezone
-
 import pandas as pd
 import streamlit as st
-
 
 # ============================================================
 # SHAiKH S HUDA | DEVOPS, DEVSECOPS & AI ENGINEERING PLATFORM
@@ -17,6 +15,32 @@ import streamlit as st
 # Kubernetes Engineering: Shaikh S Huda
 # AI & MLOps Lab: Shaikh S Huda
 # ============================================================
+
+# These functions help manage the images/ directory and display images in the Streamlit app until st.set_page_config is called.
+IMAGES_DIR = Path(__file__).parent / "images"
+IMAGE_TYPES = {".png", ".jpg", ".jpeg", ".webp"}
+
+
+def image_path(*parts: str) -> Path:
+    """Return a path inside images/, e.g. image_path("architecture", "diagram.png")."""
+    return IMAGES_DIR.joinpath(*parts)
+
+
+def list_images(folder: str) -> list[Path]:
+    """All images in an images/<folder>/ directory, sorted by name."""
+    directory = IMAGES_DIR / folder
+    if not directory.is_dir():
+        return []
+    return sorted(p for p in directory.iterdir() if p.suffix.lower() in IMAGE_TYPES)
+
+
+def show_image(*parts: str, caption: str = "") -> None:
+    """Display one image from images/, or a friendly note if it's missing."""
+    path = image_path(*parts)
+    if path.exists():
+        st.image(str(path), caption=caption, use_container_width=True)
+    else:
+        st.info(f"Add {'/'.join(parts)} to AppCode/images/ to display it.")
 
 st.set_page_config(
     page_title="Shaikh S Huda | Engineering Platform",
@@ -824,12 +848,8 @@ elif page == "🎓 Graduation Photos":
 
     # Store graduation-2024.png and optional additional graduation
     # images in AppCode/images/. The gallery auto-discovers them.
-    images_dir = Path(__file__).resolve().parent / "images"
-    photo_files = sorted(
-        file for file in images_dir.glob("graduation-*")
-        if file.is_file() and file.suffix.lower() in {".png", ".jpg", ".jpeg", ".webp"}
-    )
 
+    photo_files = list_images("graduation")
     if photo_files:
         st.subheader("Graduation Photo Gallery")
         for start in range(0, len(photo_files), 2):
@@ -841,12 +861,6 @@ elif page == "🎓 Graduation Photos":
                         caption=f"Saint Peter's University — {photo.stem.replace('-', ' ').title()}",
                         use_container_width=True,
                     )
-    else:
-        st.info(
-            "Add graduation-2024.png to AppCode/images/ "
-            "to display your graduation photos."
-        )
-
 
 # ------------------------------------------------------------
 # COMPANIES AND CLIENT ENGAGEMENTS
@@ -1153,11 +1167,11 @@ elif page == "📁 Projects":
         "End-to-end architecture covering authentication, "
         "AI-based document retrieval, security and deployment."
     )
-    st.image(
-        "images/rbac-chatbot-architecture.png",
+    show_image(
+        "architecture", "rbac-chatbot-architecture.png",
         caption="Enterprise RBAC Chatbot — Secure, Role-Based AI Architecture",
-        use_container_width=True,
     )
+
     st.code(
         """
                     EMPLOYEE

@@ -1,6 +1,6 @@
 
 pipeline {
-    agent { label 'DevopsAgentLabelV9' }
+    agent { label 'DevopsAgentLabelV7' }
 
     options {
         disableConcurrentBuilds()
@@ -13,7 +13,7 @@ pipeline {
     }
 
     stages {
-        stage('Clean Workspaces!!!!') {
+        stage('Clean Workspaces!!!!!!') {
             steps { cleanWs() }
         }
 

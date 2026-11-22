@@ -23,3 +23,8 @@ __pycache__/
 
 # Python cache
 .pytest_cache/
+terraform-kubeconfig*
+bootstrap-kubeconfig*
+kubeconfig.*
+bootstrap.*
+.terraform-auth/

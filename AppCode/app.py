@@ -877,25 +877,26 @@ elif page == "🏢 Companies & Clients":
         {
             "company": "Freelancer",
             "period": "October 2024 – Present",
-            "title": "DevOps, DevSecOps & Cloud Engineering",
+            "title": "Platform Engineering, DevOps & AI Engineering | Cloud-Native Architecture, DevSecOps, MLOps & RAG",
             "details": [
-                "Jenkins CI/CD pipeline implementations",
+                "Jenkins and GitHub Actions CI/CD pipeline implementations",
                 "Docker and Kubernetes deployments",
                 "Terraform Infrastructure as Code",
                 "Argo CD GitOps and Argo Rollouts",
                 "DevSecOps security integration",
                 "Prometheus and Grafana monitoring",
+                "AI Engineering: Two-Tier RBAC Chatbot with Streamlit frontend, FastAPI backend, JWT authentication and role-based document access",
+                "LLM & RAG Engineering: Groq LLM (openai/gpt-oss-20b), Qdrant vector database, Hugging Face embeddings, LangChain, metadata-based authorization and guardrails.",
                 "Machine learning model building",
                 "Hands-on machine learning and data analytics projects",
                 "Generative AI and RAG chatbot prototypes using Python, "
-                "LangChain, Llama, Hugging Face Transformers, ChromaDB, and FastAPI",
-                "Automated CI/CD for ML model packaging and deployment "
-                "using Jenkins, Docker, Kubernetes, and GitHub Actions",
+                "LangChain, Llama, Hugging Face Transformers, ChromaDB,Qdrant and FastAPI",
+                "Automated CI/CD for ML model packaging and deployment ",
             ],
             "technologies": (
                 "AWS, Azure, Terraform, Jenkins, Docker, Kubernetes, "
                 "Argo CD, Python, LangChain, Llama, Hugging Face "
-                "Transformers, ChromaDB, FastAPI"
+                "Transformers, ChromaDB, Qdrant, FastAPI"
             ),
         },
 

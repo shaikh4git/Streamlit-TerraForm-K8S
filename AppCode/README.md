@@ -3,20 +3,14 @@
 A namespace-scoped ServiceAccount cannot normally create namespaces, because namespaces are cluster-scoped resources.
 
 
-kubectl create namespace streamlit-terraform
+kubectl create namespace terraform-system
 
-namespace/streamlit-terraform created
+namespace/terraform-system created
 shaikh@Shaikhs-MacBook-Pro-2 Streamlit-Repo % kubectl create serviceaccount terraform-deployer \
-  -n streamlit-terraform
+  -n terraform-system
 serviceaccount/terraform-deployer created
 
-
-Two options:
-- Option A (recommended): Create the namespace once using kubectl, remove the namespace resource from Terraform, and use namespace-scoped RBAC for the Terraform deployer.
-- Option B: Grant Terraform additional cluster-scoped namespace permissions if Terraform must provision namespaces.
-
-
-- Namespace: streamlit-terraform
+- Namespace: terraform-system
 - ServiceAccount: terraform-deployer
 we can proceed with configuring Kubernetes RBAC, generating the kubeconfig, and connecting it to your Jenkins Docker agent.
 

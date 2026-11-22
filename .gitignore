@@ -16,6 +16,7 @@ crash.*.log
 .venv/
 venv/
 
+
 # Python bytecode
 __pycache__/
 *.pyc

@@ -1175,7 +1175,7 @@ elif page == "📁 Projects":
 
     st.code(
         """
-                    EMPLOYEE
+                     USER
                        |
                        v
                 STREAMLIT CHATBOT
@@ -1201,7 +1201,7 @@ elif page == "📁 Projects":
           +------------+------------+
           |            |            |
           v            v            v
-       FINANCE         HR        MARKETING
+       PRINCIPAL    TEACHER       STUDENT
           |            |            |
           +------------+------------+
                        |
@@ -1215,7 +1215,7 @@ elif page == "📁 Projects":
                  AI RESPONSE
                        |
                        v
-                  EMPLOYEE
+                     USER
 
 
         =========================================

@@ -1608,6 +1608,7 @@ elif page == "👨‍💻 About Shaikh S Huda":
         image_path = (
             Path(__file__).resolve().parent
             / "images"
+            / "graduation"
             / "shaikh-profile.jpg"
         )
 

@@ -1,0 +1,5 @@
+{
+  "files.associations": {
+    "**/jenkins-rbac-terraform-deployer.yaml": "yaml"
+  }
+}

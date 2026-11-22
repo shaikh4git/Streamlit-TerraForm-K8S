@@ -10,7 +10,8 @@ ansible/inventory/*secret*
 terraform/kubeconfig-bootstrap.yaml
 terraform-kubeconfig
 bootstrap-kubeconfig
-
+terraform-kubeconfig.backup.*
+bootstrap-kubeconfig.*
 # Python temporary files
 __pycache__/
 *.py[cod]

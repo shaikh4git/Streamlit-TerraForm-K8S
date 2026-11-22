@@ -1728,7 +1728,9 @@ st.markdown(
     <div class="footer">
         🚀 {AUTHOR} | Engineering Command Center | {VERSION}
         <p>
-            DevOps • DevSecOps • Kubernetes • Terraform • AI & MLOps
+            DevOps • DevSecOps • Docker • Kubernetes • Terraform • Python • AI & MLOps . AWS • Azure 
+            My GitHub: https://github.com/shaikh4git/
+            My LinkedIn: https://www.linkedin.com/in/shaikh-huda-shams-617aa530/details/experience/
         </p>
         <p>Designed and Developed by {AUTHOR}</p>
     </div>

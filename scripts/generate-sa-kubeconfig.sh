@@ -1,83 +1,45 @@
-
 #!/usr/bin/env bash
 set -euo pipefail
 set +x
 umask 077
 
 : "${BOOTSTRAP_KUBECONFIG:?Missing bootstrap kubeconfig}"
+OUT="${1:?Usage: generate-sa-kubeconfig.sh <output-path>}"
 
-NAMESPACE="terraform-system"
-SA_NAME="terraform-deployer"
-OUTPUT="${1:?Provide output kubeconfig path}"
+SA="${SA_NAME:-terraform-deployer}"
+SA_NS="${SA_NAMESPACE:-terraform-system}"
+APP_NS="${APP_NAMESPACE:-streamlit-terraform}"
+DURATION="${TOKEN_DURATION:-1h}"
 
-mkdir -p "$(dirname "$OUTPUT")"
+BK() { kubectl --kubeconfig="$BOOTSTRAP_KUBECONFIG" "$@"; }
+
+# Reuse the address and TLS name that the bootstrap kubeconfig already uses
+SERVER="$(BK config view --minify -o jsonpath='{.clusters[0].cluster.server}')"
+TLS_NAME="$(BK config view --minify -o jsonpath='{.clusters[0].cluster.tls-server-name}')"
+TLS_NAME="${TLS_NAME:-kubernetes.default.svc}"
+echo "Using server: $SERVER (tls-server-name: $TLS_NAME)"
 
 echo "Requesting fresh ServiceAccount token..."
-
-TOKEN="$(
-  kubectl \
-    --kubeconfig="$BOOTSTRAP_KUBECONFIG" \
-    create token "$SA_NAME" \
-    -n "$NAMESPACE" \
-    --duration=30m
-)"
+TOKEN="$(BK -n "$SA_NS" create token "$SA" --duration="$DURATION")"
+[ -n "$TOKEN" ] || { echo "Empty token" >&2; exit 1; }
 
 echo "Extracting Kubernetes CA..."
+CA_FILE="$(mktemp)"
+trap 'rm -f "$CA_FILE"' EXIT
+BK config view --raw --minify -o jsonpath='{.clusters[0].cluster.certificate-authority-data}' | base64 -d > "$CA_FILE"
+[ -s "$CA_FILE" ] || { echo "Could not read cluster CA" >&2; exit 1; }
 
-CA_DATA="$(
-  kubectl \
-    --kubeconfig="$BOOTSTRAP_KUBECONFIG" \
-    config view --raw --minify \
-    -o jsonpath='{.clusters[0].cluster.certificate-authority-data}'
-)"
-
-test -n "$CA_DATA"
-test -n "$TOKEN"
-
-# Generate standalone ServiceAccount kubeconfig.
-# No administrator credentials are copied to this file.
-
-cat > "$OUTPUT" <<EOF
-apiVersion: v1
-kind: Config
-clusters:
-- name: docker-desktop
-  cluster:
-    server: ${SERVER}
-    certificate-authority-data: ${CA_DATA}
-    tls-server-name: ${TLS_NAME}
-users:
-- name: terraform-deployer
-  user:
-    token: ${TOKEN}
-contexts:
-- name: terraform-context
-  context:
-    cluster: docker-desktop
-    user: terraform-deployer
-    namespace: streamlit-terraform
-current-context: terraform-context
-EOF
-
-unset TOKEN CA_DATA
-
-chmod 600 "$OUTPUT"
+mkdir -p "$(dirname "$OUT")"
+rm -f "$OUT"
+kubectl config --kubeconfig="$OUT" set-cluster docker-desktop \
+  --server="$SERVER" --certificate-authority="$CA_FILE" --embed-certs=true \
+  --tls-server-name="$TLS_NAME" >/dev/null
+kubectl config --kubeconfig="$OUT" set-credentials "$SA" --token="$TOKEN" >/dev/null
+kubectl config --kubeconfig="$OUT" set-context terraform-context \
+  --cluster=docker-desktop --user="$SA" --namespace="$APP_NS" >/dev/null
+kubectl config --kubeconfig="$OUT" use-context terraform-context >/dev/null
+chmod 600 "$OUT"
+unset TOKEN
 
 echo "Verifying generated ServiceAccount kubeconfig..."
-
-kubectl --kubeconfig="$OUTPUT" auth whoami
-
-echo "Checking deployment permission..."
-
-RESULT="$(
-  kubectl --kubeconfig="$OUTPUT" \
-    auth can-i create deployments \
-    -n streamlit-terraform
-)"
-
-if [[ "$RESULT" != "yes" ]]; then
-    echo "ERROR: ServiceAccount lacks deployment permissions."
-    exit 1
-fi
-
-echo "ServiceAccount authentication verified."
+kubectl --kubeconfig="$OUT" -n "$APP_NS" auth can-i create deployments

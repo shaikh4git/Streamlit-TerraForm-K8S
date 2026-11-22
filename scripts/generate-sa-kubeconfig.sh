@@ -43,9 +43,9 @@ kind: Config
 clusters:
 - name: docker-desktop
   cluster:
-    server: https://host.docker.internal:6443
+    server: ${SERVER}
     certificate-authority-data: ${CA_DATA}
-    tls-server-name: kubernetes.default.svc
+    tls-server-name: ${TLS_NAME}
 users:
 - name: terraform-deployer
   user:

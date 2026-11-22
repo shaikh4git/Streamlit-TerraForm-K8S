@@ -1726,40 +1726,11 @@ elif page == "📥 Reports":
 st.markdown(
     f"""
     <div class="footer">
-        <div style="font-size: 18px; font-weight: 600;">
-            🚀 {AUTHOR} | Engineering Command Center | {VERSION}
-        </div>
-
-        <p style="margin: 12px 0; font-size: 13px;">
-            DevOps • DevSecOps • Docker • Kubernetes • Terraform •
-            Python • AI & MLOps • AWS • Azure
-        </p>
-
-        <div style="
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            flex-wrap: wrap;
-            margin: 18px 0;
-        ">
-            <a href="https://github.com/shaikh4git/"
-               target="_blank"
-               style="text-decoration: none; font-weight: 600;">
-                💻 GitHub Repositories
-            </a>
-
-            <a href="https://www.linkedin.com/in/shaikh-huda-shams-617aa530/"
-               target="_blank"
-               style="text-decoration: none; font-weight: 600;">
-                🔗 LinkedIn Profile
-            </a>
-        </div>
-
-        <hr style="opacity: 0.25;">
-
-        <p style="font-size: 12px; margin-top: 12px;">
-            Designed and Developed by {AUTHOR}
-        </p>
+        🚀 {AUTHOR} | Engineering Command Center | {VERSION}
+            <p>
+                DevOps • DevSecOps • Docker • Kubernetes • Terraform • Python • AI & MLOps • AWS • Azure
+            </p>
+        <p>Designed and Developed by {AUTHOR}</p>
     </div>
     """,
     unsafe_allow_html=True,

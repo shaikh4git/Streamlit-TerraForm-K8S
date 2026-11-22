@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: terraform-view
+  namespace: argocd
+spec:
+  description: Shows objects in streamlit-terraform that Terraform manages
+  sourceRepos:
+    - https://github.com/shaikh4git/Streamlit-TerraForm-K8S.git
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: streamlit-terraform
+  orphanedResources:
+    warn: true
+    ignore:               # hide system objects that exist in every namespace
+      - kind: ConfigMap
+        name: kube-root-ca.crt
+      - kind: ServiceAccount
+        name: default

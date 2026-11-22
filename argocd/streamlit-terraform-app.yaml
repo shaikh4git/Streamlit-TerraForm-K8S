@@ -1,0 +1,15 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: streamlit-terraform
+  namespace: argocd
+spec:
+  project: terraform-view
+  source:
+    repoURL: https://github.com/shaikh4git/Streamlit-TerraForm-K8S.git
+    targetRevision: main
+    path: terraform-view
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: streamlit-terraform
+  syncPolicy: {}        # no auto-sync, nothing is deployed or pruned

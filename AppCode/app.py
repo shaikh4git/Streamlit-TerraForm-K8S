@@ -1724,32 +1724,55 @@ elif page == "📥 Reports":
 # ------------------------------------------------------------
 
 
-st.markdown(
+st.html(
     f"""
-<div class="footer">
-    <div style="font-size: 16px;">
-        🚀 {AUTHOR} | Engineering Command Center | {VERSION}
+    <style>
+        .footer {{
+            text-align: center;
+            padding: 20px 15px;
+            margin-top: 30px;
+            border-top: 1px solid rgba(128, 128, 128, 0.3);
+            font-size: 14px;
+            color: #aab8ce;
+        }}
+
+        .footer p {{
+            margin: 12px 0;
+        }}
+
+        .footer a {{
+            color: #8bbcff;
+            text-decoration: none;
+            font-weight: 600;
+        }}
+
+        .footer a:hover {{
+            text-decoration: underline;
+        }}
+    </style>
+
+    <div class="footer">
+        <div>
+            🚀 {AUTHOR} | Engineering Command Center | {VERSION}
+        </div>
+
+        <p>
+            DevOps • DevSecOps • Docker • Kubernetes • Terraform •
+            Python • AI & MLOps • AWS • Azure
+        </p>
+
+        <p>
+            🔗 <a href="https://www.linkedin.com/in/shaikh-huda-shams-617aa530/"
+            target="_blank">LinkedIn Profile</a>
+        </p>
+
+        <p>
+            💻 <a href="https://github.com/shaikh4git/"
+            target="_blank">GitHub Repositories</a>
+        </p>
+
+        <p>Designed and Developed by {AUTHOR}</p>
     </div>
-
-    <p>
-        DevOps • DevSecOps • Docker • Kubernetes • Terraform •
-        Python • AI & MLOps • AWS • Azure
-    </p>
-
-    <p>
-        🔗 <a href="https://www.linkedin.com/in/shaikh-huda-shams-617aa530/"
-        target="_blank" style="color: inherit; text-decoration: none;">
-        LinkedIn Profile</a>
-    </p>
-
-    <p>
-        💻 <a href="https://github.com/shaikh4git/"
-        target="_blank" style="color: inherit; text-decoration: none;">
-        GitHub Repositories</a>
-    </p>
-
-    <p>Designed and Developed by {AUTHOR}</p>
-</div>
-""",
-    unsafe_allow_html=True,
+    """
 )
+

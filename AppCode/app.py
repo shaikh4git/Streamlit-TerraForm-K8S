@@ -1727,9 +1727,28 @@ st.markdown(
     f"""
     <div class="footer">
         🚀 {AUTHOR} | Engineering Command Center | {VERSION}
-            <p>
-                DevOps • DevSecOps • Docker • Kubernetes • Terraform • Python • AI & MLOps • AWS • Azure
-            </p>
+
+        <p>
+            DevOps • DevSecOps • Docker • Kubernetes • Terraform •
+            Python • AI & MLOps • AWS • Azure
+        </p>
+
+        <p>
+            🔗 <a href="https://www.linkedin.com/in/shaikh-huda-shams-617aa530/"
+               target="_blank"
+               style="color: inherit; text-decoration: none;">
+                LinkedIn Profile
+            </a>
+        </p>
+
+        <p>
+            💻 <a href="https://github.com/shaikh4git/"
+               target="_blank"
+               style="color: inherit; text-decoration: none;">
+                GitHub Repositories
+            </a>
+        </p>
+
         <p>Designed and Developed by {AUTHOR}</p>
     </div>
     """,

@@ -3,34 +3,7 @@ from utils.image_utils import show_image, image_path, list_images
 
 def render():
 
-    st.header("RBAC Chatbot2")
-
-    # ---------------------------------------------------------
-    # PROJECT OBJECTIVE
-    # ---------------------------------------------------------
-
-    st.subheader("🎯 Project Objective")
-
-    st.markdown(
-        """
-        Enterprise organizations maintain information across multiple
-        departments and user groups. Not every employee or user should
-        have access to every document.
-
-        This project implements an AI-powered knowledge assistant that:
-
-        - Authenticates users securely.
-        - Identifies the user's department and assigned roles.
-        - Enforces Role-Based Access Control.
-        - Retrieves only authorized document content.
-        - Generates contextual answers using LangChain and Groq.
-        - Automates application delivery through GitHub Actions and GitOps.
-        """
-    )
-
-# -------------------------------------------------------
-# FastApi backend
-# -------------------------------------------------------
+    st.header("FasAPI backend")
     st.subheader("⚡ FastAPI Backend Architecture")
 
     show_image(

@@ -1193,80 +1193,11 @@ elif page == "📁 Projects":
         """
     )
 
-    application_architecture = r"""
-                         USER
-                           |
-                           v
-                    TRAEFIK INGRESS
-                           |
-                           v
-                  STREAMLIT FRONTEND
-                     (CHATBOT UI)
-                           |
-                    REST API REQUEST
-                           |
-                           v
-                    FASTAPI BACKEND
-                           |
-              +------------+------------+
-              |                         |
-              v                         v
-       USER AUTHENTICATION        JWT VALIDATION
-              |                         |
-        bcrypt Verify                   |
-              |                         |
-              +------------+------------+
-                           |
-                           v
-                AUTHENTICATED IDENTITY
-                           |
-              Department + Assigned Roles
-                           |
-                           v
-                  RBAC AUTHORIZATION
-                           |
-                 ACCESS CONTROL CHECK
-                           |
-                           v
-                 DOCUMENT RETRIEVAL
-                           |
-                           v
-               QDRANT VECTOR DATABASE
-                           |
-                  METADATA FILTERING
-                           |
-             +-------------+-------------+
-             |             |             |
-             v             v             v
-          PRINCIPAL      TEACHER       STUDENT
-             |             |             |
-             +-------------+-------------+
-                           |
-                  AUTHORIZED DOCUMENTS
-                           |
-                           v
-                 AUTHORIZED CONTEXT
-                           |
-                           v
-                LANGCHAIN RAG PIPELINE
-                           |
-                           v
-                      GROQ LLM
-                           |
-                           v
-                    AI RESPONSE
-                           |
-                           v
-                   FASTAPI BACKEND
-                           |
-                           v
-                  STREAMLIT FRONTEND
-                           |
-                           v
-                         USER
-"""
-
-    st.code(application_architecture, language="text")
+    show_image(
+            "architecture",
+            "FastApi.png",
+            caption="Document Ingestion Architecture",
+        )
 
     st.info(
         "Security principle: Authentication establishes who the user is; "

@@ -1503,8 +1503,19 @@ LANGCHAIN_API_KEY
                     v
               RUNNING CHATBOT
 """
+    # Side-by-side Architecture and CI/CD Pipeline
+    col1, col2 = st.columns([1, 1], gap="large")
 
-    st.code(cicd_architecture, language="text")
+    with col1:
+        show_image(
+            "architecture",
+            "GitHubAction.png",
+            caption="Enterprise RBAC Chatbot — Secure, Role-Based AI Architecture",
+        )
+
+    with col2:
+        st.markdown("### CI/CD and GitOps Pipeline")
+        st.code(cicd_architecture, language="text")
 
     st.markdown("**Pipeline stages**")
 

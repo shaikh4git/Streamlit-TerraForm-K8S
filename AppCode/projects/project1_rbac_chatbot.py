@@ -131,18 +131,6 @@ def render():
             caption="Enterprise RBAC Chatbot — Secure, Role-Based AI Architecture",
         )
 
-    st.subheader("⚡ FastAPI Backend Architecture")
-
-    show_image(
-            "architecture",
-            "FastApi.png",
-            caption="FasApi backend Architecture",
-        )
-
-    st.info(
-        "Security principle: Authentication establishes who the user is; "
-        "authorization determines which documents the user can retrieve."
-    )
 
     # ---------------------------------------------------------
     # DOCUMENT INGESTION
@@ -224,6 +212,21 @@ LANGCHAIN_API_KEY
             "in application source code."
         )
 
+# -------------------------------------------------------
+# FastApi backend
+# -------------------------------------------------------
+    st.subheader("⚡ FastAPI Backend Architecture")
+
+    show_image(
+            "architecture",
+            "FastApi.png",
+            caption="FasApi backend Architecture",
+        )
+
+    st.info(
+        "Security principle: Authentication establishes who the user is; "
+        "authorization determines which documents the user can retrieve."
+    )
     # ---------------------------------------------------------
     # RBAC VALIDATION
     # ---------------------------------------------------------

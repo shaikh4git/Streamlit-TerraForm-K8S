@@ -1279,47 +1279,11 @@ elif page == "📁 Projects":
 
     st.subheader("📚 Document Ingestion & Vectorization")
 
-    document_architecture = r"""
-                DEPARTMENT DOCUMENTS
-                           |
-                           v
-                 DOCUMENT INGESTION
-                           |
-                           v
-                       DOCLING
-                           |
-                           v
-                 DOCUMENT PROCESSING
-                           |
-                           v
-                 LANGCHAIN CHUNKING
-                           |
-                           v
-                 RBAC METADATA TAGGING
-                           |
-              Owner / Department / Roles
-                           |
-                           v
-                HUGGING FACE EMBEDDINGS
-                           |
-                           v
-                 QDRANT VECTOR DATABASE
-                           |
-                           v
-                   READY FOR RETRIEVAL
-                           |
-                           v
-                 FASTAPI RETRIEVAL SERVICE
-                           |
-                           v
-                 RBAC METADATA FILTERING
-                           |
-                           v
-                 AUTHORIZED DOCUMENT CHUNKS
-"""
-
-    st.code(document_architecture, language="text")
-
+    show_image(
+            "architecture",
+            "Ingestion.png",
+            caption="Document Ingestion Architecture",
+        )
     st.markdown(
         """
         **Document processing workflow**
@@ -1427,7 +1391,7 @@ LANGCHAIN_API_KEY
     show_image(
             "architecture",
             "GithubAction.png",
-            caption="Enterprise RBAC Chatbot — Secure, Role-Based AI Architecture",
+            caption="Github Action pipeline Architecture",
         )
 
     st.markdown("**Pipeline stages**")
@@ -1492,7 +1456,7 @@ enterprise-rbac-backend:7a9f4c2
     
     show_image(
             "architecture",
-            "K8s-flow.png",
+            "k8s-flow.png",
             caption="Kubernetes Deployment Workflow Architecture",
         )
 

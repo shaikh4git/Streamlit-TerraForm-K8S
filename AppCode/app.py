@@ -6,6 +6,7 @@ import random
 from datetime import datetime, timezone
 import pandas as pd
 import streamlit as st
+from utils.image_utils import image_path, list_images, show_image
 
 # ============================================================
 # SHAiKH S HUDA | DEVOPS, DEVSECOPS & AI ENGINEERING PLATFORM
@@ -15,32 +16,6 @@ import streamlit as st
 # Kubernetes Engineering: Shaikh S Huda
 # AI & MLOps Lab: Shaikh S Huda
 # ============================================================
-
-# These functions help manage the images/ directory and display images in the Streamlit app until st.set_page_config is called.
-IMAGES_DIR = Path(__file__).parent / "images"
-IMAGE_TYPES = {".png", ".jpg", ".jpeg", ".webp"}
-
-
-def image_path(*parts: str) -> Path:
-    """Return a path inside images/, e.g. image_path("architecture", "diagram.png")."""
-    return IMAGES_DIR.joinpath(*parts)
-
-
-def list_images(folder: str) -> list[Path]:
-    """All images in an images/<folder>/ directory, sorted by name."""
-    directory = IMAGES_DIR / folder
-    if not directory.is_dir():
-        return []
-    return sorted(p for p in directory.iterdir() if p.suffix.lower() in IMAGE_TYPES)
-
-
-def show_image(*parts: str, caption: str = "") -> None:
-    """Display one image from images/, or a friendly note if it's missing."""
-    path = image_path(*parts)
-    if path.exists():
-        st.image(str(path), caption=caption, use_container_width=True)
-    else:
-        st.info(f"Add {'/'.join(parts)} to AppCode/images/ to display it.")
 
 st.set_page_config(
     page_title="Shaikh S Huda | Engineering Platform",

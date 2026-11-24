@@ -1,5 +1,5 @@
 import streamlit as st
-
+from utils.image_utils import show_image, image_path, list_images
 
 def render():
 
@@ -12,15 +12,7 @@ def render():
 
     st.subheader("🏗️ System Architecture")
 
-    st.image(
-        "images/architecture/rbac-chatbot-architecture.png",
-        use_container_width=True
-    )
-
-  
-    # =========================================================
-    # PROJECT 1: ENTERPRISE RBAC CHATBOT
-    # =========================================================
+    show_image("architecture","rbac-chatbot-architecture.png")
 
     st.header("Project 1: Enterprise RBAC Chatbot 🤖")
 

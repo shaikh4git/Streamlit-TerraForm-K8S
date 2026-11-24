@@ -117,20 +117,6 @@ def render():
 
     st.divider()
 
-    # ---------------------------------------------------------
-    # APPLICATION ARCHITECTURE
-    # ---------------------------------------------------------
-
-    st.subheader("🏗️ Solution Architecture")
-    st.write(
-            "End-to-end two tier application architecture covering authentication, "
-            "AI-based document retrieval, security and deployment."
-        )
-    show_image(
-            "architecture", "rbac-chatbot-architecture.png",
-            caption="Enterprise RBAC Chatbot — Secure, Role-Based AI Architecture",
-        )
-
 
     # ---------------------------------------------------------
     # DOCUMENT INGESTION

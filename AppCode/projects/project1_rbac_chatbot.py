@@ -117,12 +117,6 @@ def render():
     # ---------------------------------------------------------
 
     st.subheader("📚 Document Ingestion & Vectorization")
-
-    show_image(
-            "architecture",
-            "Ingestion.png",
-            caption="Document Ingestion Architecture",
-        )
     st.markdown(
         """
         **Document processing workflow**
@@ -135,6 +129,13 @@ def render():
         - The backend applies authorization filters during retrieval.
         """
     )
+
+    show_image(
+            "architecture",
+            "Ingestion.png",
+            caption="Document Ingestion Architecture",
+        )
+
 
     st.divider()
 

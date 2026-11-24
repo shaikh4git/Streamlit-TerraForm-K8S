@@ -1424,97 +1424,11 @@ LANGCHAIN_API_KEY
 
     st.subheader("🔄 GitHub Actions CI/CD Pipeline")
 
-    cicd_architecture = r"""
-       =========================================
-               CI/CD AND GITOPS PIPELINE
-       =========================================
-
-                  DEVELOPER
-                      |
-                      v
-           APPLICATION GITHUB REPOSITORY
-                      |
-                      v
-              GIT PUSH / PULL REQUEST
-                      |
-                      v
-                GITHUB ACTIONS
-                      |
-             +--------+---------+
-             |                  |
-             v                  v
-         BACKEND TESTS     CODE VALIDATION
-             |
-             v
-          RBAC TESTS
-             |
-             v
-       +-----+-------------------+
-       |                         |
-       v                         v
- FRONTEND DOCKER BUILD     BACKEND DOCKER BUILD
-       |                         |
-       v                         v
- FRONTEND IMAGE            BACKEND IMAGE
-       |                         |
-       +------------+------------+
-                    |
-                    v
-                 DOCKER HUB
-                    |
-          +---------+---------+
-          |                   |
-          v                   v
-    FRONTEND IMAGE       BACKEND IMAGE
-      TAG UPDATE            TAG UPDATE
-          |                   |
-          +---------+---------+
-                    |
-                    v
-             GITOPS REPOSITORY
-                    |
-                    v
-             KUSTOMIZE MANIFESTS
-                    |
-                    v
-                  ARGO CD
-                    |
-             GITOPS SYNCHRONIZATION
-                    |
-                    v
-              ARGO ROLLOUTS
-                    |
-                    v
-         DOCKER DESKTOP KUBERNETES
-                    |
-          +---------+---------+
-          |                   |
-          v                   v
-    FRONTEND DEPLOYMENT  BACKEND DEPLOYMENT
-          |                   |
-          v                   v
-     FRONTEND SERVICE     BACKEND SERVICE
-          |                   |
-          +---------+---------+
-                    |
-                    v
-               TRAEFIK INGRESS
-                    |
-                    v
-              RUNNING CHATBOT
-"""
-    # Side-by-side Architecture and CI/CD Pipeline
-    col1, col2 = st.columns([1, 1], gap="large")
-
-    with col1:
-        show_image(
+    show_image(
             "architecture",
             "GithubAction.png",
             caption="Enterprise RBAC Chatbot — Secure, Role-Based AI Architecture",
         )
-
-    with col2:
-        st.code(cicd_architecture, language="text")
 
     st.markdown("**Pipeline stages**")
 
@@ -1575,41 +1489,12 @@ enterprise-rbac-backend:7a9f4c2
 
     st.subheader("☸️ Kubernetes Deployment & GitOps")
 
-    kubernetes_architecture = r"""
-       =========================================
-               KUBERNETES INFRASTRUCTURE
-       =========================================
-
-             DOCKER DESKTOP KUBERNETES
-                         |
-             +-----------+-----------+
-             |                       |
-             v                       v
-       NAMESPACE:              NAMESPACE:
-       TWO-TIER-RBAC           ENTERPRISE-CHATBOT
-             |                       |
-       +-----+------+                |
-       |            |                |
-       v            v                v
-   STREAMLIT      FASTAPI          QDRANT
-   FRONTEND       BACKEND          VECTOR DB
-       |            |                |
-       v            v                v
-   DEPLOYMENT    DEPLOYMENT       DEPLOYMENT
-       |            |                |
-       v            v                v
-    SERVICE       SERVICE          SERVICE
-       |            |
-       +-----+------+
-             |
-             v
-       BACKEND CONNECTS TO
-             |
-             v
-   qdrant.enterprise-chatbot.svc.cluster.local:6333
-"""
-
-    st.code(kubernetes_architecture, language="text")
+    
+    show_image(
+            "architecture",
+            "K8s-flow.png",
+            caption="Kubernetes Deployment Workflow Architecture",
+        )
 
     st.markdown(
         """

@@ -10,26 +10,26 @@ def render():
     private document retrieval and enterprise knowledge management.
     """)
 
+    st.header("Project 1:🤖")
+    
+    st.markdown(
+            """
+            **Secure AI-powered enterprise knowledge assistant with
+            department-specific document access and Role-Based Access Control.**
+    
+            Designed to simplify internal knowledge discovery and provide
+            secure access to organizational information while enforcing
+            user-specific permissions.
+    
+            This two-tier application combines a Streamlit frontend,
+            FastAPI backend, secure authentication, RBAC authorization,
+            Qdrant vector search and Groq-powered AI responses.
+            """
+        )
     st.subheader("🏗️ System Architecture")
-
     show_image("architecture","rbac-chatbot-architecture.png")
 
-    st.header("Project 1: Enterprise RBAC Chatbot 🤖")
-
-    st.markdown(
-        """
-        **Secure AI-powered enterprise knowledge assistant with
-        department-specific document access and Role-Based Access Control.**
-
-        Designed to simplify internal knowledge discovery and provide
-        secure access to organizational information while enforcing
-        user-specific permissions.
-
-        This two-tier application combines a Streamlit frontend,
-        FastAPI backend, secure authentication, RBAC authorization,
-        Qdrant vector search and Groq-powered AI responses.
-        """
-    )
+    
 
     # ---------------------------------------------------------
     # PROJECT OBJECTIVE

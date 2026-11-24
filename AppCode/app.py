@@ -1178,7 +1178,7 @@ elif page == "📁 Projects":
 
     st.subheader("🏗️ Solution Architecture")
     st.write(
-            "End-to-end architecture covering authentication, "
+            "End-to-end two tier application architecture covering authentication, "
             "AI-based document retrieval, security and deployment."
         )
     show_image(
@@ -1186,17 +1186,12 @@ elif page == "📁 Projects":
             caption="Enterprise RBAC Chatbot — Secure, Role-Based AI Architecture",
         )
 
-    st.markdown(
-        """
-        **Two-Tier Application Architecture – Streamlit Frontend
-        + FastAPI Backend**
-        """
-    )
+    st.subheader("⚡ FastAPI Backend Architecture")
 
     show_image(
             "architecture",
             "FastApi.png",
-            caption="Document Ingestion Architecture",
+            caption="FasApi backend Architecture",
         )
 
     st.info(

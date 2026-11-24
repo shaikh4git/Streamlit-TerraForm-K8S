@@ -3,14 +3,7 @@ from utils.image_utils import show_image, image_path, list_images
 
 def render():
 
-    st.header("Enterprise RBAC Chatbot")
-
-    st.markdown("""
-    Secure AI-powered chatbot with role-based access control,
-    private document retrieval and enterprise knowledge management.
-    """)
-
-    st.header("Project 1:🤖")
+    st.header("Project 1:")
     
     st.markdown(
             """

@@ -1509,12 +1509,11 @@ LANGCHAIN_API_KEY
     with col1:
         show_image(
             "architecture",
-            "GitHubAction.png",
+            "GithubAction.png",
             caption="Enterprise RBAC Chatbot — Secure, Role-Based AI Architecture",
         )
 
     with col2:
-        st.markdown("### CI/CD and GitOps Pipeline")
         st.code(cicd_architecture, language="text")
 
     st.markdown("**Pipeline stages**")

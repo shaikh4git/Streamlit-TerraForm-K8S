@@ -19,11 +19,7 @@ def render():
             Qdrant vector search and Groq-powered AI responses.
             """
         )
-    st.subheader("🏗️ System Architecture")
-    show_image("architecture","rbac-chatbot-architecture.png")
-
     
-
     # ---------------------------------------------------------
     # PROJECT OBJECTIVE
     # ---------------------------------------------------------
@@ -46,6 +42,11 @@ def render():
         - Automates application delivery through GitHub Actions and GitOps.
         """
     )
+
+    st.subheader("🏗️ System Architecture")
+    show_image("architecture","rbac-chatbot-architecture.png")
+
+    
 
     # ---------------------------------------------------------
     # KEY CAPABILITIES

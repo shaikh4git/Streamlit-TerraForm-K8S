@@ -67,7 +67,7 @@ pipeline {
                 }
             }
         }
-*/
+
         stage('Docker Build Streamlit Image') {
             steps {
                 sh '''
@@ -104,7 +104,7 @@ pipeline {
                             variable: 'BOOTSTRAP_KUBECONFIG'
                         )
                     ]) {
-                        sh 
+                        sh
                         '''
                             #!/usr/bin/env bash
                             set -euo pipefail
@@ -363,6 +363,5 @@ terraform state list || true
                 }
             }
         }
-
     }
 }

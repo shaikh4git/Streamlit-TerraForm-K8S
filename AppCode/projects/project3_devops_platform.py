@@ -4,7 +4,7 @@ from utils.image_utils import show_image, image_path, list_images
 def render():
 
     st.title(
-        "🚀 Project 2: Enterprise DevSecOps & "
+        "🚀 Project 3: Enterprise DevSecOps & "
         "Terraform-Based Kubernetes Deployment Platform"
     )
 

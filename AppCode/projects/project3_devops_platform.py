@@ -20,7 +20,7 @@ def render():
     # PROJECT OVERVIEW
     # --------------------------------------------------
 
-    st.header("📌 1. Project Overview")
+    st.subheader("🎯 Project Objective")
 
     st.markdown("""
     The objective of this project is to implement an end-to-end
@@ -39,7 +39,11 @@ def render():
     Kubernetes rollout status and application resources.
     """)
 
-    st.markdown("### Key Engineering Objectives")
+    # ---------------------------------------------------------
+    # KEY CAPABILITIES
+    # ---------------------------------------------------------
+
+    st.subheader("⚙️ Key Capabilities")
 
     objectives = [
         "Automate application build and deployment using Jenkins.",
@@ -157,7 +161,7 @@ scripts/
     # JENKINS PIPELINE
     # --------------------------------------------------
 
-    st.header("⚙️ 4. Jenkins CI/CD & DevSecOps Pipeline")
+    st.header("⚙️ Jenkins CI/CD & DevSecOps Pipeline")
 
     st.markdown("""
     Jenkins is the central automation engine responsible for
@@ -245,7 +249,7 @@ scripts/
     # SECURITY
     # --------------------------------------------------
 
-    st.header("🔐 5. DevSecOps Security Integration")
+    st.header("🔐 DevSecOps Security Integration")
 
     security_data = [
         {
@@ -294,7 +298,7 @@ scripts/
     # DOCKER AND ANSIBLE
     # --------------------------------------------------
 
-    st.header("🐳 6. Docker Build & Ansible Staging")
+    st.header("🐳 Docker Build & Ansible Staging")
 
     st.markdown("""
     After building the application image, Jenkins invokes Ansible
@@ -325,7 +329,7 @@ ansible-playbook \\
     # TERRAFORM
     # --------------------------------------------------
 
-    st.header("🏗️ 7. Terraform Infrastructure as Code")
+    st.header("🏗️ Terraform Infrastructure as Code")
 
     st.markdown("""
     Terraform is responsible for managing Kubernetes infrastructure
@@ -396,7 +400,7 @@ Image:      shaikhdocker/sshuda-streamlit-app:<BUILD>-<COMMIT>
     # DEPLOYMENT STRATEGIES
     # --------------------------------------------------
 
-    st.header("🔄 8. Deployment Strategies")
+    st.header("🔄 Deployment Strategies")
 
     st.markdown("""
     The project contains separate Jenkins pipelines and Ansible
@@ -468,7 +472,7 @@ Image:      shaikhdocker/sshuda-streamlit-app:<BUILD>-<COMMIT>
     # FINAL VERIFICATION
     # --------------------------------------------------
 
-    st.header("✅ 9. Deployment Verification")
+    st.header("✅ Deployment Verification")
 
     st.markdown("""
     After Terraform Apply, Jenkins verifies the deployed application
@@ -508,7 +512,7 @@ kubectl get deployment streamlit-deploy \\
     # TECHNOLOGY STACK
     # --------------------------------------------------
 
-    st.header("🧰 10. Technology Stack")
+    st.header("🧰 Technology Stack")
 
     tech_columns = st.columns(3)
 
@@ -535,7 +539,7 @@ kubectl get deployment streamlit-deploy \\
     # PROJECT OUTCOME
     # --------------------------------------------------
 
-    st.header("🎯 11. Engineering Outcomes")
+    st.header("🎯 Engineering Outcomes")
 
     st.markdown("""
     - Established an automated CI/CD workflow from source checkout

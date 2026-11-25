@@ -3,7 +3,7 @@ from utils.image_utils import show_image, image_path, list_images
 
 def render():
 
-    st.header("Project 1:")
+    st.header("Project 1:Enterprise AI Knowledge Intelligence & Secure DevSecOps Platform")
     
     st.markdown(
             """

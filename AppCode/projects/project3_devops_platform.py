@@ -67,7 +67,7 @@ def render():
     # HIGH LEVEL ARCHITECTURE
     # --------------------------------------------------
 
-    st.header("🏗️ 2. End-to-End System Architecture")
+    st.header("🏗️ End-to-End System Architecture")
 
     show_image(
             "architecture",

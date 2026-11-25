@@ -259,9 +259,9 @@ PROJECTS = [
     },
     {
         "id": "project3",
-        "title": "DevOps Automation Platform",
-        "description": "Automated CI/CD, infrastructure provisioning and GitOps.",
-        "technologies": ["Jenkins", "Terraform", "Ansible", "Argo CD"],
+        "title": "DevSecOps Automation Platform",
+        "description": "Enterprise DevSecOps & Terraform-Based Kubernetes Deployment Platform.",
+        "technologies": ["Jenkins", "Terraform", "Ansible", "Gitleaks","SonarQube","Dependency Check","Docker","Kubernetes","Trivvy Scan"],
         "module": "projects.project3_devops_platform"
     }
 ]

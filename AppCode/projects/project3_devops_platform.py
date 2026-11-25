@@ -3,10 +3,7 @@ from utils.image_utils import show_image, image_path, list_images
 
 def render():
 
-    st.title(
-        "🚀 Project 3: Enterprise DevSecOps & "
-        "Terraform-Based Kubernetes Deployment Platform"
-    )
+    st.header("Project 3: Enterprise DevSecOps & Terraform-Based Kubernetes Deployment Platform")
 
     st.markdown("""
     **End-to-end CI/CD | DevSecOps | Infrastructure as Code |

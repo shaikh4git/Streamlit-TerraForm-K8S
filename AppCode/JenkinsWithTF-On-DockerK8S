@@ -99,32 +99,31 @@ pipeline {
             steps {
                 timeout(time: 4, unit: 'MINUTES') {
                     withCredentials([
-                        file(
-                            credentialsId: 'kubeconfig-bootstrap',
-                            variable: 'BOOTSTRAP_KUBECONFIG'
-                        )
-                    ]) {
-                        sh '''
-                            #!/usr/bin/env bash -C '
-                            set -euo pipefail
-                            echo "Running with Bash"
-                            set +x
-                            umask 077
+                file(
+                    credentialsId: 'kubeconfig-bootstrap',
+                    variable: 'BOOTSTRAP_KUBECONFIG'
+                )
+            ]) {
+                        sh '''#!/usr/bin/env bash
+                    set -euo pipefail
 
-                            echo "===== Verify Bootstrap Authentication ======"
-                            kubectl --kubeconfig="$BOOTSTRAP_KUBECONFIG" auth whoami
+                    echo "Running with Bash: $BASH_VERSION"
+                    set +x
+                    umask 077
 
-                            mkdir -p "$WORKSPACE/.terraform-auth"
-                            chmod 700 "$WORKSPACE/.terraform-auth"
+                    echo "===== Verify Bootstrap Authentication ======"
+                    kubectl --kubeconfig="$BOOTSTRAP_KUBECONFIG" auth whoami
 
-                            echo "===== Generate Fresh SA Token and Kubeconfig ====="
+                    mkdir -p "$WORKSPACE/.terraform-auth"
+                    chmod 700 "$WORKSPACE/.terraform-auth"
 
-                            bash scripts/generate-sa-kubeconfig.sh \
-                                "$WORKSPACE/.terraform-auth/sa-kubeconfig.yaml"
+                    echo "===== Generate Fresh SA Token and Kubeconfig ====="
 
-                            echo "ServiceAccount kubeconfig generated!!."
-                            '
-                        '''
+                    bash scripts/generate-sa-kubeconfig.sh \
+                        "$WORKSPACE/.terraform-auth/sa-kubeconfig.yaml"
+
+                    echo "ServiceAccount kubeconfig generated!!."
+                '''
                     }
                 }
             }
@@ -135,24 +134,24 @@ pipeline {
                 timeout(time: 3, unit: 'MINUTES') {
                     dir('terraform') {
                         sh '''#!/usr/bin/env bash
-                            set -euo pipefail
+                    set -euo pipefail
 
-                            export KUBECONFIG="$WORKSPACE/.terraform-auth/sa-kubeconfig.yaml"
-                            export KUBE_CONFIG_PATH="$KUBECONFIG"
+                    export KUBECONFIG="$WORKSPACE/.terraform-auth/sa-kubeconfig.yaml"
+                    export KUBE_CONFIG_PATH="$KUBECONFIG"
 
-                            echo "===== Verify ServiceAccount Identity ====="
-                            kubectl auth whoami
+                    echo "===== Verify ServiceAccount Identity ====="
+                    kubectl auth whoami
 
-                            echo "===== Verify Kubernetes Access ====="
-                            kubectl auth can-i create deployments \
-                                -n streamlit-terraform | grep -qx yes
+                    echo "===== Verify Kubernetes Access ====="
+                    kubectl auth can-i create deployments \
+                        -n streamlit-terraform | grep -qx yes
 
-                            echo "===== Terraform Init ====="
-                            terraform init -input=false
+                    echo "===== Terraform Init ====="
+                    terraform init -input=false
 
-                            echo "===== Terraform Validate ====="
-                            terraform validate
-                        '''
+                    echo "===== Terraform Validate ====="
+                    terraform validate
+                '''
                     }
                 }
             }

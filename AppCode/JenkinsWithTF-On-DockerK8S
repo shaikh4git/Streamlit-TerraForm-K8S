@@ -84,7 +84,7 @@ pipeline {
                     }
                 }
 
-        stage('Docker Build Streamlit Image') {
+        stage('Docker Build Streamlit Image!') {
             steps {
                 sh '''
                     echo "Building Docker image: $FULL_IMAGE"

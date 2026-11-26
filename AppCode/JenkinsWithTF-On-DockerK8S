@@ -104,7 +104,8 @@ pipeline {
                             variable: 'BOOTSTRAP_KUBECONFIG'
                         )
                     ]) {
-                        sh ''' #!/usr/bin/env bash
+                        sh '''
+                            #!/usr/bin/env bash
                             set -euo pipefail
                             set +x
                             umask 077

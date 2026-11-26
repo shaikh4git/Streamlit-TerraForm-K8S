@@ -105,8 +105,9 @@ pipeline {
                         )
                     ]) {
                         sh '''
-                            #!/usr/bin/env bash
+                            #!/usr/bin/env bash -C '
                             set -euo pipefail
+                            echo "Running with Bash"
                             set +x
                             umask 077
 
@@ -122,6 +123,7 @@ pipeline {
                                 "$WORKSPACE/.terraform-auth/sa-kubeconfig.yaml"
 
                             echo "ServiceAccount kubeconfig generated!!."
+                            '
                         '''
                     }
                 }

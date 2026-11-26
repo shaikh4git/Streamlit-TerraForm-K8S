@@ -68,6 +68,22 @@ pipeline {
             }
         }
 
+        stage('SonarQube Analysis ') {
+                    steps {
+                        withSonarQubeEnv('SonarQubeScannerServer') {
+                            sh ''' /opt/sonar-scanner/bin/sonar-scanner -Dsonar.projectName=tfansible \
+                            -Dsonar.projectKey=tfansible '''
+                        }
+                    }
+                }
+        stage('Quality Gate') {
+                    steps {
+                        script {
+                            waitForQualityGate abortPipeline: false, credentialsId: 'sonar-token'
+                        }
+                    }
+                }
+
         stage('Docker Build Streamlit Image') {
             steps {
                 sh '''

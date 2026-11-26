@@ -97,7 +97,7 @@ pipeline {
 
         stage('Generate Kubernetes ServiceAccount Kubeconfig!!!') {
             steps {
-                timeout(time: 3, unit: 'MINUTES') {
+                timeout(time: 4, unit: 'MINUTES') {
                     withCredentials([
                         file(
                             credentialsId: 'kubeconfig-bootstrap',
